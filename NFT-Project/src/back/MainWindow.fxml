@@ -15,10 +15,10 @@
    <children>
       <TableView fx:id="collectionTableView" layoutX="133.0" layoutY="182.0" prefHeight="242.0" prefWidth="662.0">
          <columns>
-            <TableColumn fx:id="orderIdCol" prefWidth="75.0" text="Collection Name" />
-            <TableColumn fx:id="visitDateCol" prefWidth="75.0" text="Opensea [Sol]" />
-            <TableColumn fx:id="visitTimeCol" prefWidth="75.0" text="Magic eden [Sol]" />
-            <TableColumn fx:id="orderStatusCol" prefWidth="75.0" text="Diff [%]" />
+            <TableColumn fx:id="collectionNameCol" prefWidth="75.0" text="Collection Name" />
+            <TableColumn fx:id="openseaCol" prefWidth="75.0" text="Opensea [Sol]" />
+            <TableColumn fx:id="magicEdenCol" prefWidth="75.0" text="Magic eden [Sol]" />
+            <TableColumn fx:id="diffCol" prefWidth="75.0" text="Diff [%]" />
          </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
