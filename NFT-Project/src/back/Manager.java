@@ -29,19 +29,19 @@ public class Manager {
 	// FXML controllers
 
 	@FXML
-	private TableView<NFTCollectionView> collectionTableView;
+	private TableView<?> collectionTableView;
 
 	@FXML
-	private TableColumn<NFTCollectionView, String> collectionNameCol;
+	private TableColumn<?, ?> collectionNameCol;
 
 	@FXML
-	private TableColumn<NFTCollectionView, Float> openseaCol;
+	private TableColumn<?, ?> openseaCol;
 
 	@FXML
-	private TableColumn<NFTCollectionView, Float> magicEdenCol;
+	private TableColumn<?, ?> magicEdenCol;
 
 	@FXML
-	private TableColumn<NFTCollectionView, Float> diffCol;
+	private TableColumn<?, ?> diffCol;
 
 	@FXML
 	private Label headerLabel;
@@ -56,15 +56,6 @@ public class Manager {
 	private Button btnSaveThreshold;
 
 	@FXML
-	private Text txtRefreshTimer;
-
-	@FXML
-	private Text txtEmailTimer;
-
-	@FXML
-	private Text txtThreshold;
-
-	@FXML
 	private Button btnSaveList;
 
 	@FXML
@@ -74,10 +65,19 @@ public class Manager {
 	private TextField txtSearchBar;
 
 	@FXML
-	private ComboBox<Integer> cmboxEntries;
+	private ComboBox<?> cmboxEntries;
 
 	@FXML
 	private Button btnAddCollection;
+
+	@FXML
+	private TextField txtRefreshTimer;
+
+	@FXML
+	private TextField txtEmailTimer;
+
+	@FXML
+	private TextField txtThreshold;
 
 	private String urlMagicEden500 = "https://api-mainnet.magiceden.dev/v2/collections?offset=0&limit=500";
 	private String urlMagicEden1000 = "https://api-mainnet.magiceden.dev/v2/collections?offset=500&limit=500";
