@@ -1,23 +1,28 @@
 package back;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.nio.file.Paths;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
 
+import com.aspose.cells.Cells;
 import com.aspose.cells.CellsFactory;
 import com.aspose.cells.Color;
+import com.aspose.cells.ExportRangeToJsonOptions;
 import com.aspose.cells.JsonLayoutOptions;
 import com.aspose.cells.JsonUtility;
+import com.aspose.cells.Range;
 import com.aspose.cells.Style;
 import com.aspose.cells.TextAlignmentType;
 import com.aspose.cells.Workbook;
 import com.aspose.cells.Worksheet;
 
 import javax.activation.*;
-
 
 public class ExternalServices {
 
@@ -66,7 +71,6 @@ public class ExternalServices {
 
 			// Now set the actual message
 			message.setText(toSend);
-			
 
 			System.out.println("sending...");
 			// Send message
@@ -77,28 +81,28 @@ public class ExternalServices {
 		}
 	}
 
-	public static void jsonToExcel(String json, String excelName) throws Exception {
+	public static void jsonToExcel(String jsonName, String excelName) throws Exception {
 		// Instantiating a Workbook object
 		Workbook workbook = new Workbook();
 		Worksheet worksheet = workbook.getWorksheets().get(0);
-		
+
 		// Read File
-		File file = new File(json+".json");
+		File file = new File(jsonName + ".json");
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 		String jsonInput = "";
 		String tempString;
 		while ((tempString = bufferedReader.readLine()) != null) {
-		   jsonInput = jsonInput + tempString; 
+			jsonInput = jsonInput + tempString;
 		}
 		bufferedReader.close();
-				
+
 		// Set Styles
 		CellsFactory factory = new CellsFactory();
 		Style style = factory.createStyle();
 		style.setHorizontalAlignment(TextAlignmentType.CENTER);
 		style.getFont().setColor(Color.getBlueViolet());
 		style.getFont().setBold(true);
-				
+
 		// Set JsonLayoutOptions
 		JsonLayoutOptions options = new JsonLayoutOptions();
 		options.setTitleStyle(style);
@@ -106,16 +110,36 @@ public class ExternalServices {
 
 		// Import JSON Data
 		JsonUtility.importData(jsonInput, worksheet.getCells(), 0, 0, options);
-		
+
 		// Save Excel file
-		workbook.save(excelName+".xlsx");
-		System.out.println(excelName+".xls file written successfully...\n");
+		workbook.save(excelName + ".xlsx");
+		System.out.println(excelName + ".xls file written successfully...\n");
 	}
+
+	public static void excelToJson(String jsonName, String excelName) throws Exception {
+		// load XLSX file with an instance of Workbook
+		Workbook workbook = new Workbook(excelName + ".xlsx");
+		// access CellsCollection of the worksheet containing data to be converted
+		Cells cells = workbook.getWorksheets().get(0).getCells();
+		// create & set ExportRangeToJsonOptions for advanced options
+		ExportRangeToJsonOptions exportOptions = new ExportRangeToJsonOptions();
+		// create a range of cells containing data to be exported
+		Range range = cells.createRange(0, 0, cells.getLastCell().getRow() + 1, cells.getLastCell().getColumn() + 1);
+		// export range as JSON data
+		String jsonData = JsonUtility.exportRangeToJson(range, exportOptions);
+		// write data to disc in JSON format
+		BufferedWriter writer = new BufferedWriter(new FileWriter(jsonName + ".json"));
+		writer.write(jsonData);
+		writer.close();
+		System.out.println(jsonName + ".json file written successfully...\n");
+	}
+
 	public static void main(String[] args) {
-		sendMail("elirandamti97@gmail.com", "bbb");
-		
+		 sendMail("nitzansm92@gmail.com", "bbb");
+
 		try {
 			jsonToExcel("top1000", "top1000");
+			excelToJson("top", "top1000");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
