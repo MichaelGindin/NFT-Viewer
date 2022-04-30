@@ -7,10 +7,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,40 +26,49 @@ public class Manager extends Application {
 
 	// FXML controllers
 
-	private static String urlMagicEden500 = "https://api-mainnet.magiceden.dev/v2/collections?offset=0&limit=500";
-	private static String urlMagicEden1000 = "https://api-mainnet.magiceden.dev/v2/collections?offset=500&limit=500";
-	private String urlOpenSea300 = "https://api.opensea.io/api/v1/collections?offset=0&limit=300";
+	private static String urlMagicEden100 = "https://api-mainnet.magiceden.dev/v2/collections?offset=0&limit=50";
+//	private static String urlMagicEden1000 = "https://api-mainnet.magiceden.dev/v2/collections?offset=500&limit=500";
+//	private String urlOpenSea300 = "https://api.opensea.io/api/v1/collections?offset=0&limit=300";
 
 	public static void main(String[] args) throws IOException {
 
+		Timestamp startTimestamp = new Timestamp(System.currentTimeMillis());
+		System.out.println("Start :" + startTimestamp);
 		// launch(args);
-		String url = "https://api-mainnet.magiceden.dev/v2/collections?offset=0&limit=500";
+		String url = "https://api-mainnet.magiceden.dev/v2/collections?offset=0&limit=100";
 		ArrayList<String> symbols = getTopCollectionsNameSymbols();
 
-		ArrayList<Collection> collections = getCollectionPricesBySymbols(symbols);
+//		ArrayList<Collection> collections_magicEden = getCollectionPricesBySymbols_MagicEden(symbols);
+		ArrayList<Collection> collections_opensea = getCollectionPricesBySymbols_OpenSea(symbols);
 
-		for (Collection collection : collections) {
-			System.out.println(collections.indexOf(collection) + ". symbol:" + collection.getSymbol() + " floorPrice:"
-					+ collection.getFloorPrice());
+//		for (Collection collection : collections_magicEden) {
+//			System.out.println(collections_magicEden.indexOf(collection) + ". symbol:" + collection.getSymbol()
+//					+ " floorPrice:" + collection.getFloorPrice());
+//		}
+		System.out.println("\n\n\n\n");
+		for (Collection collection : collections_opensea) {
+			System.out.println(collections_opensea.indexOf(collection) + ". symbol:" + collection.getSymbol()
+					+ " floorPrice:" + collection.getFloorPrice());
 		}
+		Timestamp endTimestamp = new Timestamp(System.currentTimeMillis());
+		System.out.println("End :" + endTimestamp);
 
-		/*
-		 * String json = getJson(url);
-		 * 
-		 * FileWriter file = new FileWriter("top1000.json"); file.write(json);
-		 * file.close();
-		 */
+		String json = getJson(url);
+
+		FileWriter file = new FileWriter("top100.json");
+		file.write(json);
+		file.close();
+
 	}
 
-	private static ArrayList<Collection> getCollectionPricesBySymbols(ArrayList<String> symbols) {
-		// Magic-Eden
+	private static ArrayList<Collection> getCollectionPricesBySymbols_OpenSea(ArrayList<String> symbols) {
 		ArrayList<Collection> collections = new ArrayList<Collection>();
 
 		for (String symbol : symbols) {
-			String priceURLmagicEden = "https://api-mainnet.magiceden.dev/v2/collections/" + symbol + "/stats";
+			String priceURLopenSea = "https://api.opensea.io/api/v1/collection/" + symbol + "/stats";
 			double floorPrice;
 
-			floorPrice = getFloorPrice(priceURLmagicEden);
+			floorPrice = getFloorPrice_openSea(priceURLopenSea);
 
 			collections.add(new Collection(symbol, floorPrice));
 		}
@@ -63,7 +76,70 @@ public class Manager extends Application {
 		return collections;
 	}
 
-	public static double getFloorPrice(String url) {
+	private static double getFloorPrice_openSea(String url) {
+		try {
+
+			HttpResponse<String> response = Unirest.get(url).header("Accept", "application/json").asString();
+
+//			System.out.println("\nSending 'GET' request to URL : " + url);
+//			System.out.println("Response Code : " + responseCode);
+
+//			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//			String inputLine;
+//			StringBuffer response = new StringBuffer();
+//			Gson gson = new Gson();
+//			while ((inputLine = in.readLine()) != null) {
+//				response.append(inputLine);
+//
+//			}
+//			in.close();
+//			LinkedTreeMap collection = gson.fromJson(response.toString(), LinkedTreeMap.class);
+//			if (collection.containsKey("floor_price")) {
+//				double floorPrice = (double) collection.get("floor_price");
+//				return floorPrice;
+//			} else {
+//				return -1;
+//			}
+			if(response.getStatus()==200) {
+				
+				Gson gson = new Gson();
+				LinkedTreeMap collection = gson.fromJson(response.getBody().toString(), LinkedTreeMap.class);
+				if (collection.containsKey("floor_price")) {
+					if( collection.get("floor_price") == null)
+						return -1;
+					double floorPrice = (double) collection.get("floor_price");
+					return floorPrice;
+				} else {
+					return -2;
+				}
+				
+			}
+				
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return -3;
+
+	}
+
+	private static ArrayList<Collection> getCollectionPricesBySymbols_MagicEden(ArrayList<String> symbols) {
+		// Magic-Eden
+		ArrayList<Collection> collections = new ArrayList<Collection>();
+
+		for (String symbol : symbols) {
+			String priceURLmagicEden = "https://api-mainnet.magiceden.dev/v2/collections/" + symbol + "/stats";
+			double floorPrice;
+
+			floorPrice = getFloorPrice_magicEden(priceURLmagicEden);
+
+			collections.add(new Collection(symbol, floorPrice));
+		}
+
+		return collections;
+	}
+
+	public static double getFloorPrice_magicEden(String url) {
 		try {
 			URL obj;
 
@@ -110,8 +186,8 @@ public class Manager extends Application {
 		ArrayList<String> collections = new ArrayList<String>();
 
 		try {
-			collections.addAll(getCollectionNames(urlMagicEden500));
-			collections.addAll(getCollectionNames(urlMagicEden1000));
+			collections.addAll(getCollectionNames(urlMagicEden100));
+
 			System.out.println(collections);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
