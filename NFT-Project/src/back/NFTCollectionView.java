@@ -1,53 +1,48 @@
 package back;
 
-import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-
 public class NFTCollectionView {
-	private SimpleStringProperty collection_name;
-	private SimpleFloatProperty opensea_price;
+	private String collection_name;
+	private float opensea_price;
+	private float magic_eden_price;
+	private float diff;
 
-	public SimpleStringProperty getCollection_name() {
+	public NFTCollectionView(String collection_name, float opensea_price, float magic_eden_price, float diff) {
+		this.collection_name = collection_name;
+		this.opensea_price = opensea_price;
+		this.magic_eden_price = magic_eden_price;
+		this.diff = diff;
+	}
+
+	public String getCollection_name() {
 		return collection_name;
 	}
 
-	private SimpleFloatProperty magic_eden_price;
-	private SimpleFloatProperty diff;
-
-	public NFTCollectionView(String name, float opensea, float magic, float diff) {
-		this.collection_name = new SimpleStringProperty(name);
-		this.opensea_price = new SimpleFloatProperty(opensea);
-		this.magic_eden_price = new SimpleFloatProperty(magic);
-		this.diff = new SimpleFloatProperty(diff);
-	}
-
-	// Auto generated
-	public void setCollection_name(SimpleStringProperty collection_name) {
+	public void setCollection_name(String collection_name) {
 		this.collection_name = collection_name;
 	}
 
-	public SimpleFloatProperty getOpensea_price() {
+	public float getOpensea_price() {
 		return opensea_price;
 	}
 
-	public void setOpensea_price(SimpleFloatProperty opensea_price) {
+	public void setOpensea_price(float opensea_price) {
 		this.opensea_price = opensea_price;
 	}
 
-	public SimpleFloatProperty getMagic_eden_price() {
+	public float getMagic_eden_price() {
 		return magic_eden_price;
 	}
 
-	public void setMagic_eden_price(SimpleFloatProperty magic_eden_price) {
+	public void setMagic_eden_price(float magic_eden_price) {
 		this.magic_eden_price = magic_eden_price;
 	}
 
-	public SimpleFloatProperty getDiff() {
+	public float getDiff() {
 		return diff;
 	}
 
-	public void setDiff(SimpleFloatProperty diff) {
+	public void setDiff(float diff) {
 		this.diff = diff;
 	}
+
 }

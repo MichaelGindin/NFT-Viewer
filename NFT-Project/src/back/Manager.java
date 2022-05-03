@@ -28,8 +28,8 @@ public class Manager extends Application {
 
 	public static void main(String[] args) throws IOException {
 
-		// launch(args);
-		String url = "https://api-mainnet.magiceden.dev/v2/collections?offset=0&limit=500";
+		launch(args);
+		/*String url = "https://api-mainnet.magiceden.dev/v2/collections?offset=0&limit=500";
 		ArrayList<String> symbols = getTopCollectionsNameSymbols();
 
 		ArrayList<Collection> collections = getCollectionPricesBySymbols(symbols);
@@ -37,7 +37,7 @@ public class Manager extends Application {
 		for (Collection collection : collections) {
 			System.out.println(collections.indexOf(collection) + ". symbol:" + collection.getSymbol() + " floorPrice:"
 					+ collection.getFloorPrice());
-		}
+		}*/
 
 		/*
 		 * String json = getJson(url);
@@ -202,5 +202,7 @@ public class Manager extends Application {
 		primaryStage.setScene(sc);
 		primaryStage.show();
 		primaryStage.setResizable(false);
+		MainWindowController mainWindowController = loader.getController();
+		mainWindowController.setComboBox();
 	}
 }
