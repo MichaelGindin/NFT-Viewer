@@ -18,8 +18,8 @@ import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
 public class MagicEdenManager {
-	private static String urlMagicEden500 = "https://api-mainnet.magiceden.dev/v2/collections?offset=0&limit=120";
-	private static String urlMagicEden1000 = "https://api-mainnet.magiceden.dev/v2/collections?offset=500&limit=1";
+	private static String urlMagicEden500 = "https://api-mainnet.magiceden.dev/v2/collections?offset=0&limit=100";
+	private static String urlMagicEden1000 = "https://api-mainnet.magiceden.dev/v2/collections?offset=500&limit=20";
 	public HashMap<String, String> SymbolNameMap = new HashMap<>();
 
 	// Getting all symbols collections names

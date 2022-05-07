@@ -50,7 +50,7 @@ public class OpenSeaManager {
 		Callable<Void> callable3 = new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				HashMap<String, Double> map= get_subCollectionPricesByNames_OpenSea(symbols3);
+				HashMap<String, Double> map = get_subCollectionPricesByNames_OpenSea(symbols3);
 				map3.putAll(map);
 				System.out.println("finish 3");
 				return null;
@@ -84,15 +84,20 @@ public class OpenSeaManager {
 		HashMap<String, Double> map = new HashMap<String, Double>();
 
 		for (String symbol : symbols) {
-			String name = convertNameString(symbol);
-			String priceURLopenSea = "https://api.opensea.io/api/v1/collection/" + name + "/stats";
-			double floorPrice;
-			// System.out.println("\nSending 'GET' request to URL : " + priceURLopenSea);
+			ArrayList<String> names = convertNameString(symbol);
+			for (String name : names) {
+				String priceURLopenSea = "https://api.opensea.io/api/v1/collection/" + name + "/stats";
+				double floorPrice;
+				// System.out.println("\nSending 'GET' request to URL : " + priceURLopenSea);
 
-			floorPrice = getFloorPrice_openSea(priceURLopenSea);
+				floorPrice = getFloorPrice_openSea(priceURLopenSea);
 
-			if (floorPrice >= 0)
-				map.put(symbol, floorPrice);
+				if (floorPrice >= 0) {
+					map.put(symbol, floorPrice);
+					break;
+				}
+			}
+
 		}
 
 		return map;
@@ -132,7 +137,7 @@ public class OpenSeaManager {
 						if (stats.get("floor_price") == null)
 							return -1;
 						double floorPrice = (double) stats.get("floor_price");
-						return floorPrice*32.895425;
+						return floorPrice * 32.895425;
 					} else {
 						return -4;
 					}
@@ -151,9 +156,12 @@ public class OpenSeaManager {
 
 	}
 
-	private String convertNameString(String symbol) {
-		symbol = symbol.replace(' ', '-');
+	private ArrayList<String> convertNameString(String symbol) {
+		ArrayList<String> names = new ArrayList<>();
 		symbol = symbol.toLowerCase();
-		return symbol;
+
+		names.add(symbol.replace(' ', '-'));
+		names.add(symbol.replace(' ', '_'));
+		return names;
 	}
 }
