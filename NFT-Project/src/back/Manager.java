@@ -26,6 +26,7 @@ public class Manager extends Application {
 ////	private String urlOpenSea300 = "https://api.opensea.io/api/v1/collections?offset=0&limit=300";
 
 	public static void main(String[] args) {
+		launch(args);
 		MagicEdenManager magicEdenManager = new MagicEdenManager();
 		OpenSeaManager openSeaManager = new OpenSeaManager();
 
@@ -49,26 +50,25 @@ public class Manager extends Application {
 		ArrayList<Collection> joinedCollections = CombineMapsWithDict(dict, magicMap, openSeaMap);
 
 		PrintCollections(joinedCollections);
-		
+
 		System.out.println("Finished");
+
 	}
 
 	// join 2 collections
-	private static ArrayList<Collection> CombineMapsWithDict(HashMap<String, String> dict, 
-			HashMap<String, Double> magicmap,
-			HashMap<String, Double> openSeaMap) 
-	{
+	private static ArrayList<Collection> CombineMapsWithDict(HashMap<String, String> dict,
+			HashMap<String, Double> magicmap, HashMap<String, Double> openSeaMap) {
 		ArrayList<Collection> joinedCollections = new ArrayList<Collection>();
-		
+
 		for (String symbol : magicmap.keySet()) {
 			String name = dict.get(symbol);
-			if(openSeaMap.containsKey(name)) {
+			if (openSeaMap.containsKey(name)) {
 				double floorPriceMagic = magicmap.get(symbol);
 				double floorPriceOpenSea = openSeaMap.get(name);
-				joinedCollections.add(new Collection(symbol, name,floorPriceMagic,floorPriceOpenSea));
+				joinedCollections.add(new Collection(symbol, name, floorPriceMagic, floorPriceOpenSea));
 			}
 		}
-		
+
 		return joinedCollections;
 	}
 
@@ -76,11 +76,10 @@ public class Manager extends Application {
 	private static void PrintCollections(ArrayList<Collection> collections) {
 		for (Collection collection : collections) {
 			System.out.println(collection.getName() + ": magic:" + collection.getFloorPriceMagicEden() + " open:"
-					+ collection.getFloorPriceOpenSea()+" Diffrence:"+collection.getDiff()*100 +"%");
+					+ collection.getFloorPriceOpenSea() + " Diffrence:" + collection.getDiff() * 100 + "%");
 		}
 	}
 
-	
 	static String getJson(String url) throws IOException {
 
 		URL obj = new URL(url);
@@ -125,6 +124,9 @@ public class Manager extends Application {
 		primaryStage.setScene(sc);
 		primaryStage.show();
 		primaryStage.setResizable(false);
+		MainWindowController mainWindowController = loader.getController();
+		mainWindowController.setComboBox();
+		mainWindowController.start_data_to_Table();
 	}
 }
 
