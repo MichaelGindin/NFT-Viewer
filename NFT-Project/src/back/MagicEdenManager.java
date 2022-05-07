@@ -81,9 +81,7 @@ public class MagicEdenManager {
 
 	// get all collections prices of magic eden
 	public HashMap<String, Double> getCollectionPricesBySymbols_MagicEden(ArrayList<String> symbols) {
-		
-	
-		
+
 		HashMap<String, Double> map1 = new HashMap<String, Double>();
 		HashMap<String, Double> map2 = new HashMap<String, Double>();
 		HashMap<String, Double> map3 = new HashMap<String, Double>();
@@ -118,7 +116,7 @@ public class MagicEdenManager {
 		Callable<Void> callable3 = new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				HashMap<String, Double> map= get_subCollectionPricesBySymbols_MagicEden(symbols3);
+				HashMap<String, Double> map = get_subCollectionPricesBySymbols_MagicEden(symbols3);
 				map3.putAll(map);
 				System.out.println("finish 3");
 				return null;
@@ -147,8 +145,20 @@ public class MagicEdenManager {
 		return map1;
 	}
 
-	
-	
+	public Double getPriceMagicEden(String symbol) {
+		String priceURLmagicEden = "https://api-mainnet.magiceden.dev/v2/collections/" + symbol + "/stats";
+		double floorPrice;
+
+		floorPrice = getFloorPrice_magicEden(priceURLmagicEden);
+
+		if (floorPrice >= 0) {
+
+			return floorPrice;
+
+		}
+		return null;
+	}
+
 	// get all sub collection prices of magic eden (worker)
 	public HashMap<String, Double> get_subCollectionPricesBySymbols_MagicEden(ArrayList<String> symbols) {
 		// Magic-Eden
@@ -161,9 +171,8 @@ public class MagicEdenManager {
 			floorPrice = getFloorPrice_magicEden(priceURLmagicEden);
 
 			if (floorPrice >= 0) {
-				
-				
-				map.put(symbol,floorPrice);
+
+				map.put(symbol, floorPrice);
 
 			}
 			i++;
@@ -190,10 +199,12 @@ public class MagicEdenManager {
 
 			// add request header
 			con.setRequestProperty("User-Agent", "Mozilla/5.0");
-
+			
 			int responseCode = con.getResponseCode();
 //			System.out.println("\nSending 'GET' request to URL : " + url);
 //			System.out.println("Response Code : " + responseCode);
+			
+			
 			if (responseCode != 200) {
 				return -3;
 			}
@@ -209,12 +220,13 @@ public class MagicEdenManager {
 			LinkedTreeMap collection = gson.fromJson(response.toString(), LinkedTreeMap.class);
 			if (collection.containsKey("floorPrice")) {
 				double floorPrice = (double) collection.get("floorPrice");
-				return floorPrice / 1000000000;//getting wrong number
+				return floorPrice / 1000000000;// getting wrong number
 			} else {
 				return -1;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		return -2;

@@ -1,6 +1,8 @@
 package back;
 
-public class NFTCollectionView {
+import java.util.Comparator;
+
+public class NFTCollectionView implements Comparator<NFTCollectionView>{
 	private String collection_name;
 	private float opensea_price;
 	private float magic_eden_price;
@@ -43,6 +45,11 @@ public class NFTCollectionView {
 
 	public void setDiff(float diff) {
 		this.diff = diff;
+	}
+
+	@Override
+	public int compare(NFTCollectionView o1, NFTCollectionView o2) {
+		return o1.getCollection_name().compareTo(o2.getCollection_name());
 	}
 
 }

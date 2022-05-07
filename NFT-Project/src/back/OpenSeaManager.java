@@ -78,6 +78,23 @@ public class OpenSeaManager {
 		map1.putAll(map3);
 		return map1;
 	}
+	public Double getPriceOpenSea(String symbol) {
+		
+		ArrayList<String> names = convertNameString(symbol);
+		for (String name : names) {
+			String priceURLopenSea = "https://api.opensea.io/api/v1/collection/" + name + "/stats";
+			double floorPrice;
+			// System.out.println("\nSending 'GET' request to URL : " + priceURLopenSea);
+
+			floorPrice = getFloorPrice_openSea(priceURLopenSea);
+
+			if (floorPrice >= 0) {
+				return floorPrice;
+			}
+		}
+		
+		return null;
+	}
 
 	public HashMap<String, Double> get_subCollectionPricesByNames_OpenSea(ArrayList<String> symbols) {
 

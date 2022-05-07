@@ -16,7 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class Manager extends Application {
-
+	
 //	private static String urlTop = "https://api-mainnet.magiceden.io/all_collections_with_escrow_data";
 //
 //	// FXML controllers
@@ -26,60 +26,37 @@ public class Manager extends Application {
 ////	private String urlOpenSea300 = "https://api.opensea.io/api/v1/collections?offset=0&limit=300";
 
 	public static void main(String[] args) {
+		
 		launch(args);
-		MagicEdenManager magicEdenManager = new MagicEdenManager();
-		OpenSeaManager openSeaManager = new OpenSeaManager();
-
-		// set symbol-name
-		magicEdenManager.setTopCollectionsNamesSymbols();
-
-		ArrayList<String> symbols = new ArrayList<>(magicEdenManager.SymbolNameMap.keySet());
-
-		HashMap<String, Double> magicMap = magicEdenManager.getCollectionPricesBySymbols_MagicEden(symbols);
-//		ArrayList<Collection> magicCollections = new ArrayList<>();
-
-		System.out.println("Got magic eden collections");
-
-		// ArrayList<String> names = magicEdenManager.getTopCollectionsNames();
-		ArrayList<String> names = new ArrayList<>(magicEdenManager.SymbolNameMap.values());
-		HashMap<String, Double> openSeaMap = openSeaManager.getCollectionPricesByNames_OpenSea(names);
-
-		System.out.println("Got Opensea collections");
-
-		HashMap<String, String> dict = magicEdenManager.SymbolNameMap;
-		ArrayList<Collection> joinedCollections = CombineMapsWithDict(dict, magicMap, openSeaMap);
-
-		PrintCollections(joinedCollections);
-
-		System.out.println("Finished");
+//		MagicEdenManager magicEdenManager = new MagicEdenManager();
+//		OpenSeaManager openSeaManager = new OpenSeaManager();
+//
+//		// set symbol-name
+//		magicEdenManager.setTopCollectionsNamesSymbols();
+//
+//		ArrayList<String> symbols = new ArrayList<>(magicEdenManager.SymbolNameMap.keySet());
+//
+//		HashMap<String, Double> magicMap = magicEdenManager.getCollectionPricesBySymbols_MagicEden(symbols);
+////		ArrayList<Collection> magicCollections = new ArrayList<>();
+//
+//		System.out.println("Got magic eden collections");
+//
+//		// ArrayList<String> names = magicEdenManager.getTopCollectionsNames();
+//		ArrayList<String> names = new ArrayList<>(magicEdenManager.SymbolNameMap.values());
+//		HashMap<String, Double> openSeaMap = openSeaManager.getCollectionPricesByNames_OpenSea(names);
+//
+//		System.out.println("Got Opensea collections");
+//
+//		HashMap<String, String> dict = magicEdenManager.SymbolNameMap;
+//		ArrayList<Collection> joinedCollections = CombineMapsWithDict(dict, magicMap, openSeaMap);
+//
+//		PrintCollections(joinedCollections);
+//
+//		System.out.println("Finished");
 
 	}
 
-	// join 2 collections
-	private static ArrayList<Collection> CombineMapsWithDict(HashMap<String, String> dict,
-			HashMap<String, Double> magicmap, HashMap<String, Double> openSeaMap) {
-		ArrayList<Collection> joinedCollections = new ArrayList<Collection>();
-
-		for (String symbol : magicmap.keySet()) {
-			String name = dict.get(symbol);
-			if (openSeaMap.containsKey(name)) {
-				double floorPriceMagic = magicmap.get(symbol);
-				double floorPriceOpenSea = openSeaMap.get(name);
-				joinedCollections.add(new Collection(symbol, name, floorPriceMagic, floorPriceOpenSea));
-			}
-		}
-
-		return joinedCollections;
-	}
-
-	// helper print method
-	private static void PrintCollections(ArrayList<Collection> collections) {
-		for (Collection collection : collections) {
-			System.out.println(collection.getName() + ": magic:" + collection.getFloorPriceMagicEden() + " open:"
-					+ collection.getFloorPriceOpenSea() + " Diffrence:" + collection.getDiff() * 100 + "%");
-		}
-	}
-
+	
 	static String getJson(String url) throws IOException {
 
 		URL obj = new URL(url);

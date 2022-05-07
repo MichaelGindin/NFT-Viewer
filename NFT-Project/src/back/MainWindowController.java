@@ -1,7 +1,13 @@
 package back;
 
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -106,14 +112,33 @@ public class MainWindowController {
 
 	int rawPerPage = 10;
 	int dataSize = 1000;
-
+	RunnerService runner = null;
+	Timer timer = new Timer();
+	private final ExecutorService executorService = Executors.newFixedThreadPool(16);
+	private final ExecutorService worker = Executors.newFixedThreadPool(1);
 	@FXML
 	void OnRefreshBtnTimerClick(ActionEvent event) {
 		int refreshTime = Integer.parseInt(txtRefreshTimer.getText());
 		System.out.println(refreshTime);
+		timer.cancel();
+		timer.purge();
 
+		
+		timer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				executorService.submit(new Runnable() {
+
+					@Override
+					public void run() {
+						fillData();
+					}
+				});
+			}
+		}, 120 * 1000, refreshTime * 1000);
+		
 	}
-
+	
 	/*
 	 * private void initializeTable() { collectionNameCol.setCellValueFactory(new
 	 * PropertyValueFactory<NFTCollectionView, String>("collection_name"));
@@ -131,7 +156,7 @@ public class MainWindowController {
 
 			@Override
 			public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
-				start_data_to_Table();
+				Update();
 
 			}
 		});
@@ -141,35 +166,122 @@ public class MainWindowController {
 	private TableView<NFTCollectionView> createTable() {
 		TableView<NFTCollectionView> table = new TableView<>();
 
-		TableColumn<NFTCollectionView, String> collectionNameCol = new TableColumn<>("collection_name");
+		TableColumn<NFTCollectionView, String> collectionNameCol = new TableColumn<>("Collection name");
 		collectionNameCol.setCellValueFactory(new PropertyValueFactory<>("collection_name"));
 		collectionNameCol.setPrefWidth(200);
 
-		TableColumn<NFTCollectionView, Float> openseaCol = new TableColumn<>("opensea_price");
+		TableColumn<NFTCollectionView, Float> openseaCol = new TableColumn<>("Opensea price[SOL]");
 		openseaCol.setCellValueFactory(new PropertyValueFactory<NFTCollectionView, Float>("opensea_price"));
 		openseaCol.setPrefWidth(200);
 
-		TableColumn<NFTCollectionView, Float> magicEdenCol = new TableColumn<>("magic_eden_price");
+		TableColumn<NFTCollectionView, Float> magicEdenCol = new TableColumn<>("Magic eden price[SOL]");
 		magicEdenCol.setCellValueFactory(new PropertyValueFactory<NFTCollectionView, Float>("magic_eden_price"));
 		magicEdenCol.setPrefWidth(200);
 
-		TableColumn<NFTCollectionView, Float> diffCol = new TableColumn<>("diff");
+		TableColumn<NFTCollectionView, Float> diffCol = new TableColumn<>("Diff[%]");
 		diffCol.setCellValueFactory(new PropertyValueFactory<NFTCollectionView, Float>("diff"));
 		diffCol.setPrefWidth(200);
 		table.getColumns().addAll(collectionNameCol, openseaCol, magicEdenCol, diffCol);
 		return table;
 	}
 
-	public void start_data_to_Table() {
+	public void fillData() {
 		this.rawPerPage = cmboxEntries.getValue();
 
-		data.clear();
-		for (int i = 0; i < 150; i++) {
-			data.add(new NFTCollectionView("temp", new Float(5.5), new Float(5.5), new Float(i)));
-			data.add(new NFTCollectionView("temp1", new Float(5.5), new Float(5.5), new Float(i + 1)));
-			data.add(new NFTCollectionView("temp2", new Float(5.5), new Float(5.5), new Float(i + 1)));
-			data.add(new NFTCollectionView("temp3", new Float(5.5), new Float(5.5), new Float(i + 1)));
+		try {
+			runner.run();
+
+			runner.wait();
+			data.clear();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.err.println(e.getMessage());
 		}
+
+		Platform.runLater(() -> {
+			for (String collectionName : runner.safeCollection.keySet()) {
+				Collection collection = runner.safeCollection.get(collectionName);
+				data.add(new NFTCollectionView(collection.getName(), (float) collection.getFloorPriceOpenSea(),
+						(float) collection.getFloorPriceMagicEden(), (float) collection.getDiff()));
+			}
+		});
+
+//		for (int i = 0; i < 150; i++) {
+//			data.add(new NFTCollectionView("temp", new Float(5.5), new Float(5.5), new Float(i)));
+//			data.add(new NFTCollectionView("temp1", new Float(5.5), new Float(5.5), new Float(i + 1)));
+//			data.add(new NFTCollectionView("temp2", new Float(5.5), new Float(5.5), new Float(i + 1)));
+//			data.add(new NFTCollectionView("temp3", new Float(5.5), new Float(5.5), new Float(i + 1)));
+//		}
+		Platform.runLater(() -> pagination.setPageFactory(this::createPage));
+		Platform.runLater(() -> System.out.println("done filling"));
+		// initializeTable();
+	}
+	public void Update() {
+		this.rawPerPage = cmboxEntries.getValue();
+		data.clear();
+		Platform.runLater(() -> {
+			for (String collectionName : runner.safeCollection.keySet()) {
+				Collection collection = runner.safeCollection.get(collectionName);
+				data.add(new NFTCollectionView(collection.getName(), (float) collection.getFloorPriceOpenSea(),
+						(float) collection.getFloorPriceMagicEden(), (float) collection.getDiff()));
+			}
+			
+		});
+
+//		for (int i = 0; i < 150; i++) {
+//			data.add(new NFTCollectionView("temp", new Float(5.5), new Float(5.5), new Float(i)));
+//			data.add(new NFTCollectionView("temp1", new Float(5.5), new Float(5.5), new Float(i + 1)));
+//			data.add(new NFTCollectionView("temp2", new Float(5.5), new Float(5.5), new Float(i + 1)));
+//			data.add(new NFTCollectionView("temp3", new Float(5.5), new Float(5.5), new Float(i + 1)));
+//		}
+		Platform.runLater(() -> pagination.setPageFactory(this::createPage));
+		Platform.runLater(() -> System.out.println("done filling"));
+		// initializeTable();
+	}
+	public void start_data_to_Table() {
+		this.rawPerPage = cmboxEntries.getValue();
+		runner = new RunnerService();
+		txtRefreshTimer.setText(120 + "");
+		worker.submit(new Runnable() {
+			
+			@Override
+			public void run() {
+				int ammount = 0 ;
+				int currentammount = 0;
+				
+				while(true) {
+					try {
+						Thread.sleep(10000);
+						Update();
+						
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+					}
+					
+				}
+				
+			}
+		});
+		timer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				executorService.submit(new Runnable() {
+
+					@Override
+					public void run() {
+						fillData();
+					}
+				});
+			}
+		}, 0 * 1000, 240 * 1000);
+		data.clear();
+
+//		for (int i = 0; i < 150; i++) {
+//			data.add(new NFTCollectionView("temp", new Float(5.5), new Float(5.5), new Float(i)));
+//			data.add(new NFTCollectionView("temp1", new Float(5.5), new Float(5.5), new Float(i + 1)));
+//			data.add(new NFTCollectionView("temp2", new Float(5.5), new Float(5.5), new Float(i + 1)));
+//			data.add(new NFTCollectionView("temp3", new Float(5.5), new Float(5.5), new Float(i + 1)));
+//		}
 		pagination.setPageFactory(this::createPage);
 		// initializeTable();
 	}
