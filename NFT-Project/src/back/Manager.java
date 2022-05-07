@@ -204,5 +204,6 @@ public class Manager extends Application {
 		primaryStage.setResizable(false);
 		MainWindowController mainWindowController = loader.getController();
 		mainWindowController.setComboBox();
+		mainWindowController.start_data_to_Table();
 	}
 }
