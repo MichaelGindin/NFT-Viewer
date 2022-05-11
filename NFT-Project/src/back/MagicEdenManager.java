@@ -26,7 +26,7 @@ public class MagicEdenManager {
 	public void setTopCollectionsNamesSymbols() {
 
 		ArrayList<String> collections = new ArrayList<String>();
-
+		SymbolNameMap = new HashMap<>();
 		try {
 
 			setCollectionNamesSymbols(urlMagicEden500);

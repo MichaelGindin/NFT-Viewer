@@ -99,16 +99,16 @@ public class MainWindowController {
 	private Pagination pagination;
 
 	@FXML
-	private Text txtEmailTimer;
+	private TextField  txtEmailTimer;
 
 	@FXML
-	private Text txtRefreshTimer;
+	private TextField  txtRefreshTimer;
 
 	@FXML
 	private TextField txtSearchBar;
 
 	@FXML
-	private Text txtThreshold;
+	private TextField  txtThreshold;
 
 	private TableView<NFTCollectionView> collectionTableView = createTable();
 
@@ -120,32 +120,33 @@ public class MainWindowController {
 	Timer timer = new Timer();
 	private final ExecutorService executorService = Executors.newFixedThreadPool(16);
 	private final ExecutorService worker = Executors.newFixedThreadPool(1);
-
+	private Thread filler= null;
+	private int refreshTime= 60;
 	@FXML
 	void OnRefreshBtnTimerClick(ActionEvent event) {
-		int refreshTime = Integer.parseInt(txtRefreshTimer.getText());
+		refreshTime = Integer.parseInt(txtRefreshTimer.getText());
 		System.out.println(refreshTime);
 
-		timer.purge();
-
-		timer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				executorService.submit(new Runnable() {
-
-					@Override
-					public void run() {
-						fillData();
-					}
-				});
-				try {
-					executorService.awaitTermination(1000, null);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}, 120 * 1000, refreshTime * 1000);
+//		timer.purge();
+//
+//		timer.scheduleAtFixedRate(new TimerTask() {
+//			@Override
+//			public void run() {
+//				executorService.submit(new Runnable() {
+//
+//					@Override
+//					public void run() {
+//						fillData();
+//					}
+//				});
+//				try {
+//					executorService.awaitTermination(1000, null);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		}, 120 * 1000, refreshTime * 1000);
 
 	}
 
@@ -201,12 +202,12 @@ public class MainWindowController {
 		try {
 			runner.run();
 
-			data.clear();
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.err.println(e.getMessage());
 		}
-
+/*
 		Platform.runLater(() -> {
 			List<String> collectionNames = new ArrayList<String>(runner.safeCollection.keySet());
 			Collections.sort(collectionNames);
@@ -221,14 +222,16 @@ public class MainWindowController {
 		Platform.runLater(() -> pagination.setPageCount(collectionTableView.getItems().size() / rawPerPage));
 		Platform.runLater(() -> System.out.println(pagination.getPageCount()));
 		Platform.runLater(() -> pagination.setMaxPageIndicatorCount((data.size() / (rawPerPage))));
+		
+		*/
 //		for (int i = 0; i < 150; i++) {
 //			data.add(new NFTCollectionView("temp", new Float(5.5), new Float(5.5), new Float(i)));
 //			data.add(new NFTCollectionView("temp1", new Float(5.5), new Float(5.5), new Float(i + 1)));
 //			data.add(new NFTCollectionView("temp2", new Float(5.5), new Float(5.5), new Float(i + 1)));
 //			data.add(new NFTCollectionView("temp3", new Float(5.5), new Float(5.5), new Float(i + 1)));
 //		}
-		Platform.runLater(() -> pagination.setPageFactory(this::createPage));
-		Platform.runLater(() -> System.out.println("done filling"));
+//		Platform.runLater(() -> pagination.setPageFactory(this::createPage));
+//		Platform.runLater(() -> System.out.println("done filling"));
 		// initializeTable();
 	}
 
@@ -265,40 +268,69 @@ public class MainWindowController {
 		pagination.setMaxPageIndicatorCount((data.size() / (rawPerPage)));
 		this.rawPerPage = cmboxEntries.getValue();
 		runner = new RunnerService();
-		txtRefreshTimer.setText(120 + "");
-		worker.submit(new Runnable() {
-
+		txtRefreshTimer.setText(30 + "");
+		
+		filler= new Thread(new Runnable() {
+			
 			@Override
 			public void run() {
-				int ammount = 0;
-				int currentammount = 0;
-
-				while (true) {
+				while(true) {
+					fillData();
+					System.out.println("Start to update");
+					Update();
+					
 					try {
-						Thread.sleep(10000);
-						Update();
-
+						System.out.println("Referesh time is:"+refreshTime);
+						Thread.sleep(refreshTime*1000);
+						
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
+						System.err.println("Thread error");
 					}
-
 				}
-
+				
 			}
 		});
-		timer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				executorService.submit(new Runnable() {
-
-					@Override
-					public void run() {
-						fillData();
-					}
-				});
-			}
-		}, 0 * 1000, 240 * 1000);
-		data.clear();
+		
+		
+		filler.start();
+		
+//		
+//		worker.submit(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				int ammount = 0;
+//				int currentammount = 0;
+//
+//				while (true) {
+//					try {
+//						Thread.sleep(10000);
+//						Update();
+//
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//					}
+//
+//				}
+//
+//			}
+//		});
+//		
+//		
+//		timer.scheduleAtFixedRate(new TimerTask() {
+//			@Override
+//			public void run() {
+//				executorService.submit(new Runnable() {
+//
+//					@Override
+//					public void run() {
+//						fillData();
+//					}
+//				});
+//			}
+//		}, 0 * 1000, 240 * 1000);
+//		data.clear();
 
 //		for (int i = 0; i < 150; i++) {
 //			data.add(new NFTCollectionView("temp", new Float(5.5), new Float(5.5), new Float(i)));
