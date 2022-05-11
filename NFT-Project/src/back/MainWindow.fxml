@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="back.MainWindowController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="back.MainWindowController">
    <children>
       <Label fx:id="headerLabel" layoutX="294.0" layoutY="27.0" text="Top 1000 NFT Collections">
          <font>
@@ -41,7 +41,7 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <Pagination fx:id="pagination" layoutX="55.0" layoutY="178.0" prefHeight="248.0" prefWidth="800.0" />
+      <Pagination fx:id="pagination" layoutX="55.0" layoutY="178.0" maxPageIndicatorCount="1" pageCount="1" prefHeight="248.0" prefWidth="800.0" />
    </children>
    <padding>
       <Insets bottom="25.0" left="5.0" right="5.0" top="5.0" />

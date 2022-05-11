@@ -1,7 +1,11 @@
 package back;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
@@ -116,14 +120,14 @@ public class MainWindowController {
 	Timer timer = new Timer();
 	private final ExecutorService executorService = Executors.newFixedThreadPool(16);
 	private final ExecutorService worker = Executors.newFixedThreadPool(1);
+
 	@FXML
 	void OnRefreshBtnTimerClick(ActionEvent event) {
 		int refreshTime = Integer.parseInt(txtRefreshTimer.getText());
 		System.out.println(refreshTime);
-		timer.cancel();
+
 		timer.purge();
 
-		
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
@@ -134,11 +138,17 @@ public class MainWindowController {
 						fillData();
 					}
 				});
+				try {
+					executorService.awaitTermination(1000, null);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}, 120 * 1000, refreshTime * 1000);
-		
+
 	}
-	
+
 	/*
 	 * private void initializeTable() { collectionNameCol.setCellValueFactory(new
 	 * PropertyValueFactory<NFTCollectionView, String>("collection_name"));
@@ -191,7 +201,6 @@ public class MainWindowController {
 		try {
 			runner.run();
 
-			runner.wait();
 			data.clear();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -199,13 +208,19 @@ public class MainWindowController {
 		}
 
 		Platform.runLater(() -> {
-			for (String collectionName : runner.safeCollection.keySet()) {
+			List<String> collectionNames = new ArrayList<String>(runner.safeCollection.keySet());
+			Collections.sort(collectionNames);
+
+			for (String collectionName : collectionNames) {
 				Collection collection = runner.safeCollection.get(collectionName);
 				data.add(new NFTCollectionView(collection.getName(), (float) collection.getFloorPriceOpenSea(),
-						(float) collection.getFloorPriceMagicEden(), (float) collection.getDiff()));
+						(float) collection.getFloorPriceMagicEden(), (float) collection.getDiff() * 100));
 			}
 		});
-
+		System.out.println(pagination.getPageCount());
+		Platform.runLater(() -> pagination.setPageCount(collectionTableView.getItems().size() / rawPerPage));
+		Platform.runLater(() -> System.out.println(pagination.getPageCount()));
+		Platform.runLater(() -> pagination.setMaxPageIndicatorCount((data.size() / (rawPerPage))));
 //		for (int i = 0; i < 150; i++) {
 //			data.add(new NFTCollectionView("temp", new Float(5.5), new Float(5.5), new Float(i)));
 //			data.add(new NFTCollectionView("temp1", new Float(5.5), new Float(5.5), new Float(i + 1)));
@@ -216,18 +231,23 @@ public class MainWindowController {
 		Platform.runLater(() -> System.out.println("done filling"));
 		// initializeTable();
 	}
+
 	public void Update() {
+
 		this.rawPerPage = cmboxEntries.getValue();
+
 		data.clear();
 		Platform.runLater(() -> {
 			for (String collectionName : runner.safeCollection.keySet()) {
 				Collection collection = runner.safeCollection.get(collectionName);
-				data.add(new NFTCollectionView(collection.getName(), (float) collection.getFloorPriceOpenSea(),
-						(float) collection.getFloorPriceMagicEden(), (float) collection.getDiff()));
-			}
-			
-		});
 
+				data.add(new NFTCollectionView(collection.getName(), (float) collection.getFloorPriceOpenSea(),
+						(float) collection.getFloorPriceMagicEden(), (float) collection.getDiff() * 100));
+			}
+
+		});
+		Platform.runLater(() -> pagination.setPageCount((data.size() / (rawPerPage))));
+		Platform.runLater(() -> pagination.setMaxPageIndicatorCount((data.size() / (rawPerPage))));
 //		for (int i = 0; i < 150; i++) {
 //			data.add(new NFTCollectionView("temp", new Float(5.5), new Float(5.5), new Float(i)));
 //			data.add(new NFTCollectionView("temp1", new Float(5.5), new Float(5.5), new Float(i + 1)));
@@ -238,28 +258,32 @@ public class MainWindowController {
 		Platform.runLater(() -> System.out.println("done filling"));
 		// initializeTable();
 	}
+
 	public void start_data_to_Table() {
+		pagination.autosize();
+		pagination.setPageCount((data.size() / (rawPerPage)));
+		pagination.setMaxPageIndicatorCount((data.size() / (rawPerPage)));
 		this.rawPerPage = cmboxEntries.getValue();
 		runner = new RunnerService();
 		txtRefreshTimer.setText(120 + "");
 		worker.submit(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				int ammount = 0 ;
+				int ammount = 0;
 				int currentammount = 0;
-				
-				while(true) {
+
+				while (true) {
 					try {
 						Thread.sleep(10000);
 						Update();
-						
+
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 					}
-					
+
 				}
-				
+
 			}
 		});
 		timer.scheduleAtFixedRate(new TimerTask() {

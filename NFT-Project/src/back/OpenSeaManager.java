@@ -122,7 +122,6 @@ public class OpenSeaManager {
 
 	private double getFloorPrice_openSea(String url) {
 		try {
-
 			HttpResponse<String> response = Unirest.get(url).header("Accept", "application/json").asString();
 
 //			System.out.println("\nSending 'GET' request to URL : " + url);
@@ -167,7 +166,7 @@ public class OpenSeaManager {
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		return -3;
 

@@ -58,6 +58,7 @@ public class RunnerService implements Runnable {
 					}
 					else {
 						newCollection = new Collection(symbol, name, magicPrice, openSeaPrice);
+						
 					}
 					safeCollection.put(name, newCollection);
 
