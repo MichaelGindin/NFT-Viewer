@@ -17,7 +17,7 @@ public class RunnerService implements Runnable {
 	}
 
 	public void StartFillingData() {
-
+		safeCollection = new ConcurrentHashMap<String, Collection>();
 		MagicEdenManager magicEdenManager = new MagicEdenManager();
 		OpenSeaManager openSeaManager = new OpenSeaManager();
 
@@ -30,12 +30,12 @@ public class RunnerService implements Runnable {
 		// each thread will update ConcurrentHashMap<String, String>() after calling
 		// both api requests;
 		ExecutorService es = Executors.newFixedThreadPool(symbols.size());
-		
+		Thread[] workers = new Thread[symbols.size()];
 
 		for (int i = 0; i < symbols.size(); i++) {
 
 			int index = i;
-			es.execute(new Runnable() {
+			workers[index]= new Thread(new Runnable() {
 
 				@Override
 				public void run() {
@@ -58,15 +58,55 @@ public class RunnerService implements Runnable {
 					}
 					else {
 						newCollection = new Collection(symbol, name, magicPrice, openSeaPrice);
+						safeCollection.put(name, newCollection);
 					}
-					safeCollection.put(name, newCollection);
+//					safeCollection.put(name, newCollection);
 
 				}
 			});
+			workers[index].start();
+			
+			
+//			es.execute(new Runnable() {
+//
+//				@Override
+//				public void run() {
+//					String symbol = symbols.get(index);
+//					String name = magicEdenManager.SymbolNameMap.get(symbols.get(index));
+//
+//					Double magicPrice = magicEdenManager.getPriceMagicEden(symbol);
+//					Double openSeaPrice = openSeaManager.getPriceOpenSea(name);
+//					
+//					if (magicPrice == null && openSeaPrice == null) {
+//						return;
+//					}
+//					
+//					Collection newCollection =null;
+//					if(magicPrice==null) {
+//						newCollection = new Collection(symbol, name, 0, openSeaPrice);
+//					}
+//					else if(openSeaPrice==null) {
+//						newCollection = new Collection(symbol, name, magicPrice,0);
+//					}
+//					else {
+//						newCollection = new Collection(symbol, name, magicPrice, openSeaPrice);
+//						
+//					}
+//					safeCollection.put(name, newCollection);
+//
+//				}
+//			});
 			
 			
 		}
-		
+		for (Thread thread : workers) {
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				System.err.println("join error");
+			}
+		}
 		
 		
 //

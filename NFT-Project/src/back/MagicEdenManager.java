@@ -18,23 +18,24 @@ import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
 public class MagicEdenManager {
-	private static String urlMagicEden500 = "https://api-mainnet.magiceden.dev/v2/collections?offset=0&limit=100";
-	private static String urlMagicEden1000 = "https://api-mainnet.magiceden.dev/v2/collections?offset=500&limit=20";
+	private static String urlMagicEden500 = "https://api-mainnet.magiceden.dev/v2/collections?offset=0&limit=500";
+	private static String urlMagicEden1000 = "https://api-mainnet.magiceden.dev/v2/collections?offset=500&limit=500";
 	public HashMap<String, String> SymbolNameMap = new HashMap<>();
 
 	// Getting all symbols collections names
 	public void setTopCollectionsNamesSymbols() {
 
 		ArrayList<String> collections = new ArrayList<String>();
-
+		SymbolNameMap = new HashMap<>();
 		try {
 
 			setCollectionNamesSymbols(urlMagicEden500);
+			Thread.sleep(1000);
 			setCollectionNamesSymbols(urlMagicEden1000);
 			// System.out.println(collections);
-		} catch (IOException e) {
+		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 	}
@@ -52,7 +53,7 @@ public class MagicEdenManager {
 		con.setRequestProperty("User-Agent", "Mozilla/5.0");
 
 		int responseCode = con.getResponseCode();
-
+		
 		System.out.println("\nSending 'GET' request to URL : " + url);
 		System.out.println("Response Code : " + responseCode);
 
@@ -227,7 +228,7 @@ public class MagicEdenManager {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		return -2;
 

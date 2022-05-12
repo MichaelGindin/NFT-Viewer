@@ -8,9 +8,8 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="696.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="back.MainWindowController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="back.MainWindowController">
    <children>
       <Label fx:id="headerLabel" layoutX="294.0" layoutY="27.0" text="Top 1000 NFT Collections">
          <font>
@@ -24,13 +23,15 @@
       <Button fx:id="btnSaveEmailTimer" layoutX="457.0" layoutY="495.0" mnemonicParsing="false" onMouseClicked="#updateEmailTimer" prefHeight="25.0" prefWidth="61.0" text="Save" />
       <Button fx:id="btnSaveThreshold" layoutX="457.0" layoutY="521.0" mnemonicParsing="false" onMouseClicked="#updateThreshold" prefHeight="25.0" prefWidth="61.0" text="Save" />
       <Label layoutX="397.0" layoutY="472.0" prefHeight="17.0" prefWidth="22.0" text="sec" underline="true" />
+      <TextField fx:id="txtRefreshTimer" layoutX="338.0" layoutY="466.0" prefHeight="26.0" prefWidth="49.0" />
       <Label layoutX="394.0" layoutY="499.0" prefHeight="17.0" prefWidth="22.0" text="sec" underline="true" />
-      <Label layoutX="393.0" layoutY="525.0" prefHeight="17.0" prefWidth="22.0" text="\%" underline="true" />
-      <Text fx:id="txtRefreshTimer" layoutX="362.0" layoutY="485.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5" wrappingWidth="22.00000137090683" />
-      <Text fx:id="txtEmailTimer" layoutX="361.0" layoutY="512.0" strokeType="OUTSIDE" strokeWidth="0.0" text="60" wrappingWidth="22.00000137090683" />
-      <Text fx:id="txtThreshold" layoutX="361.0" layoutY="538.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1" wrappingWidth="22.00000137090683" />
+
+      <TextField fx:id="txtEmailTimer" layoutX="332.0" layoutY="495.0" prefHeight="26.0" prefWidth="49.0" />
+      <Label layoutX="393.0" layoutY="525.0" prefHeight="21.0" prefWidth="53.0" text="percent" underline="true" />
+      <TextField fx:id="txtThreshold" layoutX="328.0" layoutY="522.0" prefHeight="26.0" prefWidth="61.0" />
       <Button fx:id="btnSaveList" layoutX="642.0" layoutY="33.0" mnemonicParsing="false" onMouseClicked="#saveAsList" prefHeight="25.0" prefWidth="149.0" text="Save list" />
       <Button fx:id="btnUploadList" layoutX="642.0" layoutY="62.0" mnemonicParsing="false" onMouseClicked="#uploadList" prefHeight="25.0" prefWidth="149.0" text="Upload list" />
+
       <TextField fx:id="txtSearchBar" layoutX="642.0" layoutY="97.0" promptText="search" />
       <ComboBox fx:id="cmboxEntries" layoutX="179.0" layoutY="75.0" prefHeight="25.0" prefWidth="110.0" />
       <Label layoutX="136.0" layoutY="79.0" prefHeight="17.0" prefWidth="43.0" text="Show" />
@@ -41,10 +42,12 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <Pagination fx:id="pagination" layoutX="55.0" layoutY="178.0" prefHeight="248.0" prefWidth="800.0" />
-      <Label layoutX="129.0" layoutY="552.0" text="Send emails to" />
-      <Text fx:id="emails" layoutX="359.0" layoutY="569.0" strokeType="OUTSIDE" strokeWidth="0.0" text="nitzansm92@gmail.com" />
-      <Button layoutX="457.0" layoutY="557.0" mnemonicParsing="false" onMouseClicked="#saveEmails" text="Save" />
+
+      <Pagination fx:id="pagination" layoutX="55.0" layoutY="178.0" maxPageIndicatorCount="1" pageCount="1" prefHeight="248.0" prefWidth="800.0" />
+      <Label layoutX="129.0" layoutY="552.0" text="Send emails to" underline="true" />
+      <TextField fx:id="emails" layoutX="322.0" layoutY="558.0" prefHeight="31.0" prefWidth="133.0" />
+      <Button layoutX="455.0" layoutY="558.0" mnemonicParsing="false" onMouseClicked="#saveEmails" text="Save" />
+
    </children>
    <padding>
       <Insets bottom="25.0" left="5.0" right="5.0" top="5.0" />
