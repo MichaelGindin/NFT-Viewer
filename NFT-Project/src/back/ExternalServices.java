@@ -132,6 +132,8 @@ public class ExternalServices {
 		// System.out.println(jsonName + ".json file written successfully...\n");
 		ArrayList<NFTCollectionView> list = new ArrayList<>();
 		for (int i = 1; i < dataTable.length; i++) {
+			if(dataTable[i][1]==null)
+				break;
 			float openSeaPrice = Float.parseFloat((String)dataTable[i][1]);
 			float magicEdenPrice = Float.parseFloat((String)dataTable[i][2]);
 			float diff = Float.parseFloat((String)dataTable[i][3]);

@@ -131,7 +131,7 @@ public class MainWindowController {
 	private boolean emailTheradFlag = false;
 	private Thread filler= null;
 	private int refreshTime= 60;
-
+	
 	@FXML
 	void OnRefreshBtnTimerClick(ActionEvent event) {
 		refreshTime = Integer.parseInt(txtRefreshTimer.getText());
@@ -370,12 +370,13 @@ public class MainWindowController {
 			collectionTableView.setItems(list);
 		} catch (Exception e) {
 			e.printStackTrace();
+			//System.out.println("There is not any list in this name");
 		}
 	}
 
 	@FXML
 	void saveEmails(MouseEvent event) {
-		if (emails != null && emails.getText() != null) {
+		if (emails.getText().length() != 0&& txtEmailTimer.getText().length() != 0&&txtThreshold.getText().length() != 0) {
 			String text = emails.getText();
 			if (text.contains(";"))
 				emailArray = text.split(";");
