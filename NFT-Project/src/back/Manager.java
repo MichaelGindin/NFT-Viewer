@@ -99,6 +99,9 @@ public class Manager extends Application {
 		Scene sc = new Scene(root);
 		primaryStage.setTitle("NFT-Viewer");
 		primaryStage.setScene(sc);
+		
+		primaryStage.setMinWidth(1000);
+		primaryStage.setMinHeight(700);
 		primaryStage.show();
 		primaryStage.setResizable(false);
 		MainWindowController mainWindowController = loader.getController();

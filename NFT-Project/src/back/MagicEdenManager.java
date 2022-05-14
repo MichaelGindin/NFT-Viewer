@@ -41,22 +41,35 @@ public class MagicEdenManager {
 	}
 
 	// Getting collection symbols by URL
-	private void setCollectionNamesSymbols(String url) throws IOException {
-
-		URL obj = new URL(url);
-		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-
-		// optional default is GET
-		con.setRequestMethod("GET");
-
-		con.setRequestProperty("Accept", "application/json");
-		con.setRequestProperty("User-Agent", "Mozilla/5.0");
-
-		int responseCode = con.getResponseCode();
+	private void setCollectionNamesSymbols(String url) throws IOException, InterruptedException {
 		
-		System.out.println("\nSending 'GET' request to URL : " + url);
-		System.out.println("Response Code : " + responseCode);
+		URL obj ;
+		HttpsURLConnection con ;
+		int responseCode=0;
+		while(true) {
+			obj = new URL(url);
+			con = (HttpsURLConnection) obj.openConnection();
+			
+			// optional default is GET
+			con.setRequestMethod("GET");
 
+			con.setRequestProperty("Accept", "application/json");
+			con.setRequestProperty("User-Agent", "Mozilla/5.0");
+			responseCode = con.getResponseCode();
+			System.out.println("\nSending 'GET' request to URL : " + url);
+			System.out.println("Response Code : " + responseCode);
+			if(responseCode == 200) {
+				break;
+			}
+			else {
+				System.out.println("Trying again");
+				Thread.sleep(10000);
+				
+			}
+		}
+
+		
+	
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		String inputLine;
 		StringBuffer response = new StringBuffer();

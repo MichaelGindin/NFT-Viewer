@@ -1,15 +1,8 @@
 package back;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
-import java.util.Collections;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,8 +12,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -32,9 +23,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
-import javafx.util.Callback;
-import sun.font.CreatedFontTracker;
 
 public class MainWindowController {
 	/*
@@ -130,25 +118,33 @@ public class MainWindowController {
 	private EmailSender send;
 	private boolean emailTheradFlag = false;
 	private Thread filler= null;
-	private int refreshTime= 60;
+	private int refreshTime;
 	
 	@FXML
 	void OnRefreshBtnTimerClick(ActionEvent event) {
 		refreshTime = Integer.parseInt(txtRefreshTimer.getText());
 		System.out.println(refreshTime);
 
-		timer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				executorService.submit(new Runnable() {
-					@Override
-					public void run() {
-						fillData();
-					}
-				});
-			}
-		}, 120 * 1000, refreshTime * 1000);
-
+//		timer.purge();
+//
+//		timer.scheduleAtFixedRate(new TimerTask() {
+//			@Override
+//			public void run() {
+//				executorService.submit(new Runnable() {
+//
+//					@Override
+//					public void run() {
+//						fillData();
+//					}
+//				});
+//				try {
+//					executorService.awaitTermination(1000, null);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		}, 120 * 1000, refreshTime * 1000);
 
 	}
 
@@ -266,12 +262,13 @@ public class MainWindowController {
 	}
 
 	public void start_data_to_Table() {
+		refreshTime= 60;
 		pagination.autosize();
 		pagination.setPageCount((data.size() / (rawPerPage)));
 		pagination.setMaxPageIndicatorCount((data.size() / (rawPerPage)));
 		this.rawPerPage = cmboxEntries.getValue();
 		runner = new RunnerService();
-		txtRefreshTimer.setText(30 + "");
+		txtRefreshTimer.setText(60 + "");
 		
 		filler= new Thread(new Runnable() {
 			
