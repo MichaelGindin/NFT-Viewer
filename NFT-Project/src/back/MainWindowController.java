@@ -2,7 +2,9 @@ package back;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+
 import java.util.Collections;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +31,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import sun.font.CreatedFontTracker;
@@ -110,6 +113,9 @@ public class MainWindowController {
 	@FXML
 	private TextField  txtThreshold;
 
+	@FXML
+	private TextField emails;
+
 	private TableView<NFTCollectionView> collectionTableView = createTable();
 
 	ObservableList<NFTCollectionView> data = FXCollections.observableArrayList();
@@ -120,33 +126,29 @@ public class MainWindowController {
 	Timer timer = new Timer();
 	private final ExecutorService executorService = Executors.newFixedThreadPool(16);
 	private final ExecutorService worker = Executors.newFixedThreadPool(1);
+	private static String[] emailArray = new String[1];
+	private EmailSender send;
+	private boolean emailTheradFlag = false;
 	private Thread filler= null;
 	private int refreshTime= 60;
+	
 	@FXML
 	void OnRefreshBtnTimerClick(ActionEvent event) {
 		refreshTime = Integer.parseInt(txtRefreshTimer.getText());
 		System.out.println(refreshTime);
 
-//		timer.purge();
-//
-//		timer.scheduleAtFixedRate(new TimerTask() {
-//			@Override
-//			public void run() {
-//				executorService.submit(new Runnable() {
-//
-//					@Override
-//					public void run() {
-//						fillData();
-//					}
-//				});
-//				try {
-//					executorService.awaitTermination(1000, null);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		}, 120 * 1000, refreshTime * 1000);
+		timer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				executorService.submit(new Runnable() {
+					@Override
+					public void run() {
+						fillData();
+					}
+				});
+			}
+		}, 120 * 1000, refreshTime * 1000);
+
 
 	}
 
@@ -244,6 +246,7 @@ public class MainWindowController {
 			for (String collectionName : runner.safeCollection.keySet()) {
 				Collection collection = runner.safeCollection.get(collectionName);
 
+
 				data.add(new NFTCollectionView(collection.getName(), (float) collection.getFloorPriceOpenSea(),
 						(float) collection.getFloorPriceMagicEden(), (float) collection.getDiff() * 100));
 			}
@@ -274,21 +277,25 @@ public class MainWindowController {
 			
 			@Override
 			public void run() {
+
 				while(true) {
 					fillData();
 					System.out.println("Start to update");
 					Update();
 					
 					try {
+
 						System.out.println("Referesh time is:"+refreshTime);
 						Thread.sleep(refreshTime*1000);
 						
+
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						System.err.println("Thread error");
 					}
+
 				}
-				
+
 			}
 		});
 		
@@ -349,4 +356,64 @@ public class MainWindowController {
 		return collectionTableView;
 	}
 
+	@FXML
+	void saveAsList(MouseEvent event) {
+		ExternalServices.listToExcel(new ArrayList<NFTCollectionView>(collectionTableView.getItems()));
+	}
+
+	@FXML
+	void uploadList(MouseEvent event) {
+		try {
+			ObservableList<NFTCollectionView> list = FXCollections
+					.observableList(ExternalServices.uploadList("collections", rawPerPage, 4));
+
+			collectionTableView.setItems(list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			//System.out.println("There is not any list in this name");
+		}
+	}
+
+	@FXML
+	void saveEmails(MouseEvent event) {
+		if (emails.getText().length() != 0&& txtEmailTimer.getText().length() != 0&&txtThreshold.getText().length() != 0) {
+			String text = emails.getText();
+			if (text.contains(";"))
+				emailArray = text.split(";");
+			else
+				emailArray[0] = text;
+
+			ArrayList<NFTCollectionView> collections = new ArrayList<NFTCollectionView>(collectionTableView.getItems());
+			int threshold = Integer.parseInt(txtThreshold.getText());
+			int sleepTime = Integer.parseInt(txtEmailTimer.getText());
+			send = new EmailSender(emailArray, collections, threshold, sleepTime);
+			Thread t;
+			if (!emailTheradFlag) {
+				emailTheradFlag = true;// doesn't need another thread
+				t = new Thread(send);
+				t.start();
+			}
+			else
+				updateEmailFields();
+		}
+	}
+	
+	@FXML
+    void updateEmailTimer(MouseEvent event) {
+		if(emailTheradFlag)
+			updateEmailFields();
+    }
+	
+	void updateEmailFields() {
+		ArrayList<NFTCollectionView> collections = new ArrayList<NFTCollectionView>(collectionTableView.getItems());
+		int threshold = Integer.parseInt(txtThreshold.getText());
+		int sleepTime = Integer.parseInt(txtEmailTimer.getText());
+		send.updateFields(emailArray, collections, threshold, sleepTime);
+	}
+	
+	 @FXML
+	    void updateThreshold(MouseEvent event) {
+		 if(emailTheradFlag)
+				updateEmailFields();
+	    }
 }

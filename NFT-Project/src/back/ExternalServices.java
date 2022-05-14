@@ -3,9 +3,9 @@ package back;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.nio.file.Paths;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -22,33 +22,29 @@ import com.aspose.cells.TextAlignmentType;
 import com.aspose.cells.Workbook;
 import com.aspose.cells.Worksheet;
 
-import javax.activation.*;
-
 public class ExternalServices {
 
-	public static final String from = "designpatterns111@gmail.com";
+	public static final String from = "designpatterns111@outlook.co.il";
+	public static final String pass = "Ds123456+";
 
 	public static void sendMail(String sendTo, String toSend) {
 
 		// Assuming you are sending email from through gmails smtp
-		String host = "smtp.gmail.com";
+		String host = "smtp.live.com";
 
 		// Get system properties
 		Properties properties = System.getProperties();
 
 		// Setup mail server
-		properties.put("mail.smtp.host", host);
-		properties.put("mail.smtp.port", "465");
-		properties.put("mail.smtp.ssl.enable", "true");
+		properties.put("mail.smtp.host", "smtp-mail.outlook.com");
+		properties.put("mail.smtp.port", "587");
+		properties.put("mail.smtp.starttls.enable", "true");
 		properties.put("mail.smtp.auth", "true");
-
 		// Get the Session object.// and pass username and password
 		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 
 			protected PasswordAuthentication getPasswordAuthentication() {
-
-				return new PasswordAuthentication("designpatterns111@gmail.com", "Ds123456+");
-
+				return new PasswordAuthentication(from, pass);
 			}
 
 		});
@@ -57,6 +53,7 @@ public class ExternalServices {
 		session.setDebug(true);
 
 		try {
+
 			// Create a default MimeMessage object.
 			MimeMessage message = new MimeMessage(session);
 
@@ -81,68 +78,79 @@ public class ExternalServices {
 		}
 	}
 
-	public static void jsonToExcel(String jsonName, String excelName) throws Exception {
-		// Instantiating a Workbook object
+	public static void listToExcel(ArrayList<NFTCollectionView> rows) {
+		// Initialize a Workbook object
 		Workbook workbook = new Workbook();
+
+		// Obtaining the reference of the worksheet
 		Worksheet worksheet = workbook.getWorksheets().get(0);
 
-		// Read File
-		File file = new File(jsonName + ".json");
-		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-		String jsonInput = "";
-		String tempString;
-		while ((tempString = bufferedReader.readLine()) != null) {
-			jsonInput = jsonInput + tempString;
+		String[][] array2D = new String[rows.size() + 1][4];
+
+		array2D[0][0] = "Collection name";
+		array2D[0][1] = "Opensea price[SOL]";
+		array2D[0][2] = "Magic eden price[SOL]";
+		array2D[0][3] = "Diff[%]";
+		int j = 0;
+		for (int i = 1; i < rows.size() + 1; i++) {
+			array2D[i][j++] = rows.get(i - 1).getCollection_name();
+			array2D[i][j++] = String.valueOf(rows.get(i - 1).getOpensea_price());
+			array2D[i][j++] = String.valueOf(rows.get(i - 1).getMagic_eden_price());
+			array2D[i][j] = String.valueOf(rows.get(i - 1).getDiff());
+			j = 0;
 		}
-		bufferedReader.close();
-
-		// Set Styles
-		CellsFactory factory = new CellsFactory();
-		Style style = factory.createStyle();
-		style.setHorizontalAlignment(TextAlignmentType.CENTER);
-		style.getFont().setColor(Color.getBlueViolet());
-		style.getFont().setBold(true);
-
-		// Set JsonLayoutOptions
-		JsonLayoutOptions options = new JsonLayoutOptions();
-		options.setTitleStyle(style);
-		options.setArrayAsTable(true);
-
-		// Import JSON Data
-		JsonUtility.importData(jsonInput, worksheet.getCells(), 0, 0, options);
-
-		// Save Excel file
-		workbook.save(excelName + ".xlsx");
-		System.out.println(excelName + ".xls file written successfully...\n");
-	}
-
-	public static void excelToJson(String jsonName, String excelName) throws Exception {
-		// load XLSX file with an instance of Workbook
-		Workbook workbook = new Workbook(excelName + ".xlsx");
-		// access CellsCollection of the worksheet containing data to be converted
-		Cells cells = workbook.getWorksheets().get(0).getCells();
-		// create & set ExportRangeToJsonOptions for advanced options
-		ExportRangeToJsonOptions exportOptions = new ExportRangeToJsonOptions();
-		// create a range of cells containing data to be exported
-		Range range = cells.createRange(0, 0, cells.getLastCell().getRow() + 1, cells.getLastCell().getColumn() + 1);
-		// export range as JSON data
-		String jsonData = JsonUtility.exportRangeToJson(range, exportOptions);
-		// write data to disc in JSON format
-		BufferedWriter writer = new BufferedWriter(new FileWriter(jsonName + ".json"));
-		writer.write(jsonData);
-		writer.close();
-		System.out.println(jsonName + ".json file written successfully...\n");
-	}
-
-	public static void main(String[] args) {
-		 sendMail("nitzansm92@gmail.com", "bbb");
-
+		// Exporting the array of names to first row and first column vertically
 		try {
-			jsonToExcel("top1000", "top1000");
-			excelToJson("top", "top1000");
+			worksheet.getCells().importArray(array2D, 0, 0);
+			// Saving the Excel file
+			workbook.save("collections.xlsx");
+			System.out.println(("Exported the data to excel."));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public static ArrayList<NFTCollectionView> uploadList(String listName, int rowNum, int colNum) throws Exception {
+		FileInputStream fstream = new FileInputStream(listName + ".xlsx");
+
+		// Instantiating a Workbook object
+		Workbook workbook = new Workbook(fstream);
+
+		// Accessing the first worksheet in the Excel file
+		Worksheet worksheet = workbook.getWorksheets().get(0);
+
+		// Exporting the contents of 7 rows and 2 columns starting from 1st cell
+		// to Array.
+		Object dataTable[][] = worksheet.getCells().exportArray(0, 0, rowNum, colNum);
+
+		// Printing the number of rows exported
+		System.out.println("No. Of Rows Exported: " + dataTable.length);
+
+		// Closing the file stream to free all resources
+		fstream.close();
+		// System.out.println(jsonName + ".json file written successfully...\n");
+		ArrayList<NFTCollectionView> list = new ArrayList<>();
+		for (int i = 1; i < dataTable.length; i++) {
+			if(dataTable[i][1]==null)
+				break;
+			float openSeaPrice = Float.parseFloat((String)dataTable[i][1]);
+			float magicEdenPrice = Float.parseFloat((String)dataTable[i][2]);
+			float diff = Float.parseFloat((String)dataTable[i][3]);
+			NFTCollectionView temp = new NFTCollectionView((String)dataTable[i][0],openSeaPrice ,magicEdenPrice, diff);
+			list.add(temp);
+		}
+		return list;
+	}
+
+	public static void main(String[] args) throws Exception {
+		NFTCollectionView col = new NFTCollectionView("a", 5, 3, 5 / 3);
+		ArrayList<NFTCollectionView> a = new ArrayList<NFTCollectionView>();
+		a.add(col);
+		listToExcel(a);
+		ArrayList<NFTCollectionView> list = uploadList("collections", a.size(), 4);
+		for(NFTCollectionView colo: list)
+			System.out.println(colo.getCollection_name()+" "+colo.getOpensea_price()+" "+colo.getMagic_eden_price()+" "+colo.getDiff());
+
 	}
 }
