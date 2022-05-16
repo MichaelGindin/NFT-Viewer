@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import utils.ExchangeAdapter;
 
 public class Manager extends Application {
 	
@@ -27,7 +28,13 @@ public class Manager extends Application {
 
 	public static void main(String[] args) {
 		
+//		ExchangeAdapter adapter = new ExchangeAdapter();
+//		System.out.println(adapter.Convert("eth", "sol", 1));
 		launch(args);
+		
+		
+		
+		
 //		MagicEdenManager magicEdenManager = new MagicEdenManager();
 //		OpenSeaManager openSeaManager = new OpenSeaManager();
 //

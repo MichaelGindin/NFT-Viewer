@@ -12,8 +12,10 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 
-public class OpenSeaManager {
+import utils.ExchangeAdapter;
 
+public class OpenSeaManager {
+	ExchangeAdapter exchangeAdapter = new ExchangeAdapter();
 	public HashMap<String, Double> getCollectionPricesByNames_OpenSea(ArrayList<String> symbols) {
 
 		HashMap<String, Double> map1 = new HashMap<String, Double>();
@@ -153,7 +155,8 @@ public class OpenSeaManager {
 						if (stats.get("floor_price") == null)
 							return -1;
 						double floorPrice = (double) stats.get("floor_price");
-						return floorPrice * 32.895425;
+						return exchangeAdapter.Convert("eth", "sol", floorPrice);
+								
 					} else {
 						return -4;
 					}
