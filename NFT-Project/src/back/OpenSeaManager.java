@@ -15,7 +15,7 @@ import com.mashape.unirest.http.Unirest;
 import utils.ExchangeAdapter;
 
 public class OpenSeaManager {
-	ExchangeAdapter exchangeAdapter = new ExchangeAdapter();
+	ExchangeAdapter exchangeAdapter = ExchangeAdapter.getInstance();
 	public HashMap<String, Double> getCollectionPricesByNames_OpenSea(ArrayList<String> symbols) {
 
 		HashMap<String, Double> map1 = new HashMap<String, Double>();

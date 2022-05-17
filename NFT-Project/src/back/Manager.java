@@ -28,8 +28,7 @@ public class Manager extends Application {
 
 	public static void main(String[] args) {
 		
-//		ExchangeAdapter adapter = new ExchangeAdapter();
-//		System.out.println(adapter.Convert("eth", "sol", 1));
+
 		launch(args);
 		
 		
