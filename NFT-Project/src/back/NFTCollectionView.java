@@ -4,11 +4,11 @@ import java.util.Comparator;
 
 public class NFTCollectionView implements Comparator<NFTCollectionView>{
 	private String collection_name;
-	private float opensea_price;
-	private float magic_eden_price;
-	private float diff;
+	private String opensea_price;
+	private String magic_eden_price;
+	private String diff;
 
-	public NFTCollectionView(String collection_name, float opensea_price, float magic_eden_price, float diff) {
+	public NFTCollectionView(String collection_name, String opensea_price, String magic_eden_price, String diff) {
 		this.collection_name = collection_name;
 		this.opensea_price = opensea_price;
 		this.magic_eden_price = magic_eden_price;
@@ -23,27 +23,27 @@ public class NFTCollectionView implements Comparator<NFTCollectionView>{
 		this.collection_name = collection_name;
 	}
 
-	public float getOpensea_price() {
+	public String getOpensea_price() {
 		return opensea_price;
 	}
 
-	public void setOpensea_price(float opensea_price) {
+	public void setOpensea_price(String opensea_price) {
 		this.opensea_price = opensea_price;
 	}
 
-	public float getMagic_eden_price() {
+	public String getMagic_eden_price() {
 		return magic_eden_price;
 	}
 
-	public void setMagic_eden_price(float magic_eden_price) {
+	public void setMagic_eden_price(String magic_eden_price) {
 		this.magic_eden_price = magic_eden_price;
 	}
 
-	public float getDiff() {
+	public String getDiff() {
 		return diff;
 	}
 
-	public void setDiff(float diff) {
+	public void setDiff(String diff) {
 		this.diff = diff;
 	}
 

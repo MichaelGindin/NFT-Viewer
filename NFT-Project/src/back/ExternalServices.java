@@ -137,14 +137,14 @@ public class ExternalServices {
 			float openSeaPrice = Float.parseFloat((String)dataTable[i][1]);
 			float magicEdenPrice = Float.parseFloat((String)dataTable[i][2]);
 			float diff = Float.parseFloat((String)dataTable[i][3]);
-			NFTCollectionView temp = new NFTCollectionView((String)dataTable[i][0],openSeaPrice ,magicEdenPrice, diff);
+			NFTCollectionView temp = new NFTCollectionView((String)dataTable[i][0],(String)dataTable[i][1] ,(String)dataTable[i][2], (String)dataTable[i][3]);
 			list.add(temp);
 		}
 		return list;
 	}
 
 	public static void main(String[] args) throws Exception {
-		NFTCollectionView col = new NFTCollectionView("a", 5, 3, 5 / 3);
+		NFTCollectionView col = new NFTCollectionView("a", "5", "3", (5 / 3) + "");
 		ArrayList<NFTCollectionView> a = new ArrayList<NFTCollectionView>();
 		a.add(col);
 		listToExcel(a);
