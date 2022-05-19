@@ -241,10 +241,28 @@ public class MainWindowController {
 		Platform.runLater(() -> {
 			for (String collectionName : runner.safeCollection.keySet()) {
 				Collection collection = runner.safeCollection.get(collectionName);
-
-
-				data.add(new NFTCollectionView(collection.getName(), (float) collection.getFloorPriceOpenSea(),
-						(float) collection.getFloorPriceMagicEden(), (float) collection.getDiff() * 100));
+				String collection_name;
+				String opensea_price;
+				String magic_eden_price;
+				String diff;
+				collection_name = collection.getName();
+				if(collection.getFloorPriceOpenSea() == 0 )
+					opensea_price = "N/A";
+				else 
+					opensea_price = String.format("%.3f", collection.getFloorPriceOpenSea());
+				if(collection.getFloorPriceMagicEden() == 0)
+					magic_eden_price = "N/A";
+				else
+					magic_eden_price = String.format("%.3f",collection.getFloorPriceMagicEden());
+				if(collection.getFloorPriceOpenSea() == 0 || collection.getFloorPriceMagicEden() == 0)
+					diff = "-";
+				else if(collection.getDiff() > 0) {
+					String temp = String.format("%.3f", collection.getDiff());  
+					diff = "+" + temp;
+				}else {
+					diff = String.format("%.3f", collection.getDiff());  
+				}
+				data.add(new NFTCollectionView(collection_name, opensea_price, magic_eden_price, diff));
 			}
 
 		});

@@ -5,16 +5,17 @@ public class Collection {
 	private double floorPriceMagicEden = 0;
 	private double floorPriceOpenSea = 0;
 	private String name = "";
-	private double diff=0;
-	public Collection(String symbol,String name, double floorPriceMagicEden, double floorPriceOpenSea) {
+	private double diff = 0;
+
+	public Collection(String symbol, String name, double floorPriceMagicEden, double floorPriceOpenSea) {
 		super();
 		this.symbol = symbol;
 		this.name = name;
 		this.floorPriceMagicEden = floorPriceMagicEden;
 		this.floorPriceOpenSea = floorPriceOpenSea;
-		
-		if(floorPriceMagicEden!=0)
-			diff = floorPriceOpenSea/floorPriceMagicEden;
+
+		if (floorPriceMagicEden != 0)
+			diff = ((floorPriceMagicEden * 100) / floorPriceOpenSea) - 100;
 	}
 
 	public double getDiff() {
