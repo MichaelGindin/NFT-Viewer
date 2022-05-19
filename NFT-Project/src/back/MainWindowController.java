@@ -257,10 +257,10 @@ public class MainWindowController {
 				if(collection.getFloorPriceOpenSea() == 0 || collection.getFloorPriceMagicEden() == 0)
 					diff = "-";
 				else if(collection.getDiff() > 0) {
-					String temp = String.format("%.3f", collection.getDiff() * 100);  
+					String temp = String.format("%.3f", collection.getDiff());  
 					diff = "+" + temp;
 				}else {
-					diff = String.format("%.3f", collection.getDiff() * 100);  
+					diff = String.format("%.3f", collection.getDiff());  
 				}
 				data.add(new NFTCollectionView(collection_name, opensea_price, magic_eden_price, diff));
 			}
