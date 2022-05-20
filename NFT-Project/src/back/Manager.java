@@ -114,6 +114,7 @@ public class Manager extends Application {
 		mainWindowController.setComboBox();
 		mainWindowController.start_data_to_Table();
 		mainWindowController.SetImage();
+		
 	}
 }
 

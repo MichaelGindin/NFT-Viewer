@@ -433,7 +433,10 @@ public class MainWindowController {
 				updateEmailFields();
 	    }
 	 public void SetImage (){
-	        ImageView imageView = new ImageView(getClass().getResource("../Icons/SavListIcon_1.png").toExternalForm());
-	        btnSaveList.setGraphic(imageView);
+	        ImageView imageViewSave = new ImageView(getClass().getResource("../Icons/SavListIcon_1.png").toExternalForm());
+	        btnSaveList.setGraphic(imageViewSave);
+	        ImageView imageViewUpload = new ImageView(getClass().getResource("../Icons/up.png").toExternalForm());
+	        btnUploadList.setGraphic(imageViewUpload);
 	    }
+	 
 }
