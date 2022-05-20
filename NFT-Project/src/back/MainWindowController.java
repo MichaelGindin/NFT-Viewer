@@ -22,6 +22,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 public class MainWindowController {
@@ -430,5 +431,9 @@ public class MainWindowController {
 	    void updateThreshold(MouseEvent event) {
 		 if(emailTheradFlag)
 				updateEmailFields();
+	    }
+	 public void SetImage (){
+	        ImageView imageView = new ImageView(getClass().getResource("../Icons/SavListIcon_1.png").toExternalForm());
+	        btnSaveList.setGraphic(imageView);
 	    }
 }
