@@ -104,6 +104,12 @@ public class MainWindowController {
 
 	@FXML
 	private TextField emails;
+    @FXML
+    private Button btnSaveEmail;
+    @FXML
+    private TextField txtAddCollection;
+    @FXML
+    private Label lblShowingCounter;
 
 	private TableView<NFTCollectionView> collectionTableView = createTable();
 
@@ -369,6 +375,8 @@ public class MainWindowController {
 		int fromIndex = pageIndex * rawPerPage;
 		int toIndex = Math.min(fromIndex + rawPerPage, data.size());
 		collectionTableView.setItems(FXCollections.observableArrayList(data.subList(fromIndex, toIndex)));
+		lblShowingCounter.setText("Showing "+ (fromIndex + 1) +" to "+ toIndex +" of "+data.size()+" entries");
+		
 		return collectionTableView;
 	}
 
@@ -437,6 +445,14 @@ public class MainWindowController {
 	        btnSaveList.setGraphic(imageViewSave);
 	        ImageView imageViewUpload = new ImageView(getClass().getResource("../Icons/up.png").toExternalForm());
 	        btnUploadList.setGraphic(imageViewUpload);
+	        ImageView imageViewSettings1 = new ImageView(getClass().getResource("../Icons/save.png").toExternalForm());
+	        ImageView imageViewSettings2 = new ImageView(getClass().getResource("../Icons/save.png").toExternalForm());
+	        ImageView imageViewSettings3 = new ImageView(getClass().getResource("../Icons/save.png").toExternalForm());
+	        ImageView imageViewSettings4 = new ImageView(getClass().getResource("../Icons/save.png").toExternalForm());
+	        btnSaveEmailTimer.setGraphic(imageViewSettings1);
+	        btnSaveRefreshTimer.setGraphic(imageViewSettings2);
+	        btnSaveThreshold.setGraphic(imageViewSettings3);
+	        btnSaveEmail.setGraphic(imageViewSettings4);
 	    }
 	 
 }

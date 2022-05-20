@@ -438,7 +438,7 @@
 	-fx-stroke-width: 5px;
 }
 
-#txtSearchBar,#txtRefreshTimer,#txtEmailTimer,#txtThreshold
+#txtSearchBar,#txtRefreshTimer,#txtEmailTimer,#txtThreshold,#emails,#txtAddCollection
 {
 	-fx-prompt-text-fill: -fx-prompttext;
 	-fx-text-fill: -fx-primarytext;

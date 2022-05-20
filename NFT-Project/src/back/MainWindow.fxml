@@ -16,40 +16,46 @@
 				<Font size="26.0" />
 			</font>
 		</Label>
-		<Label layoutX="133.0" layoutY="439.0" text="Settings" underline="true" />
-		<Label layoutX="128.0" layoutY="470.0" prefHeight="17.0" prefWidth="216.0" text="Refresh collection floor price every" underline="true" />
-		<Label layoutX="128.0" layoutY="499.0" prefHeight="17.0" prefWidth="216.0" text="Check if need to send email every" underline="true" />
-		<Label layoutX="129.0" layoutY="525.0" prefHeight="17.0" prefWidth="216.0" text="Email threshold" underline="true" />
-		<Button fx:id="btnSaveRefreshTimer" layoutX="457.0" layoutY="468.0" mnemonicParsing="false" onAction="#OnRefreshBtnTimerClick" prefHeight="25.0" prefWidth="61.0" text="Save" />
-		<Button fx:id="btnSaveEmailTimer" layoutX="457.0" layoutY="495.0" mnemonicParsing="false" onMouseClicked="#updateEmailTimer" prefHeight="25.0" prefWidth="61.0" text="Save" />
-		<Button fx:id="btnSaveThreshold" layoutX="457.0" layoutY="521.0" mnemonicParsing="false" onMouseClicked="#updateThreshold" prefHeight="25.0" prefWidth="61.0" text="Save" />
-		<Label layoutX="397.0" layoutY="472.0" prefHeight="17.0" prefWidth="22.0" text="sec" underline="true" />
-		<TextField fx:id="txtRefreshTimer" layoutX="338.0" layoutY="466.0" prefHeight="26.0" prefWidth="49.0" />
-		<Label layoutX="394.0" layoutY="499.0" prefHeight="17.0" prefWidth="22.0" text="sec" underline="true" />
+		<Label layoutX="124.0" layoutY="435.0" style="-fx-font-weight: bold;" text="Settings" underline="true" />
+		<Label layoutX="120.0" layoutY="471.0" prefHeight="17.0" prefWidth="216.0" text="Refresh collection floor price every" underline="true" />
+		<Label layoutX="119.0" layoutY="504.0" prefHeight="17.0" prefWidth="216.0" text="Check if need to send email every" underline="true" />
+		<Label layoutX="119.0" layoutY="536.0" prefHeight="17.0" prefWidth="216.0" text="Email threshold" underline="true" />
+		<Button fx:id="btnSaveRefreshTimer" layoutX="457.0" layoutY="469.0" maxHeight="25.0" maxWidth="25.0" minHeight="5.0" minWidth="5.0" mnemonicParsing="false" onAction="#OnRefreshBtnTimerClick" prefHeight="25.0" prefWidth="25.0" />
+		<Button fx:id="btnSaveEmailTimer" layoutX="457.0" layoutY="504.0" maxHeight="25.0" maxWidth="25.0" minHeight="5.0" minWidth="5.0" mnemonicParsing="false" onMouseClicked="#updateEmailTimer" prefHeight="25.0" prefWidth="25.0" />
+		<Button fx:id="btnSaveThreshold" layoutX="457.0" layoutY="536.0" maxHeight="25.0" maxWidth="25.0" minHeight="5.0" minWidth="5.0" mnemonicParsing="false" onMouseClicked="#updateThreshold" prefHeight="25.0" prefWidth="25.0" />
+		<Label layoutX="405.0" layoutY="471.0" prefHeight="17.0" prefWidth="22.0" text="sec" underline="true" />
+		<TextField fx:id="txtRefreshTimer" layoutX="328.0" layoutY="471.0" minHeight="5.0" minWidth="5.0" prefHeight="21.0" prefWidth="61.0" />
+		<Label layoutX="405.0" layoutY="508.0" prefHeight="17.0" prefWidth="22.0" text="sec" underline="true" />
 
-		<TextField fx:id="txtEmailTimer" layoutX="332.0" layoutY="495.0" prefHeight="26.0" prefWidth="49.0" />
-		<Label layoutX="393.0" layoutY="525.0" prefHeight="21.0" prefWidth="53.0" text="percent" underline="true" />
-		<TextField fx:id="txtThreshold" layoutX="328.0" layoutY="522.0" prefHeight="26.0" prefWidth="61.0" />
-		<Button fx:id="btnSaveList" layoutX="718.0" layoutY="14.0" maxHeight="35.0" maxWidth="35.0" minHeight="5.0" minWidth="5.0" mnemonicParsing="false" onMouseClicked="#saveAsList" prefHeight="35.0" prefWidth="35.0" />
-		<Button fx:id="btnUploadList" layoutX="718.0" layoutY="63.0" maxHeight="35.0" maxWidth="35.0" minHeight="5.0" minWidth="5.0" mnemonicParsing="false" onMouseClicked="#uploadList" prefHeight="35.0" prefWidth="35.0" />
+		<TextField fx:id="txtEmailTimer" layoutX="331.0" layoutY="508.0" minHeight="5.0" minWidth="5.0" prefHeight="20.0" prefWidth="61.0" />
+		<Label layoutX="284.0" layoutY="536.0" prefHeight="21.0" prefWidth="53.0" text="percent" underline="true" />
+		<TextField fx:id="txtThreshold" layoutX="218.0" layoutY="536.0" minHeight="5.0" minWidth="5.0" prefHeight="20.0" prefWidth="61.0" />
+		<Button fx:id="btnSaveList" layoutX="805.0" layoutY="14.0" maxHeight="35.0" maxWidth="35.0" minHeight="5.0" minWidth="5.0" mnemonicParsing="false" onMouseClicked="#saveAsList" prefHeight="35.0" prefWidth="35.0" />
+		<Button fx:id="btnUploadList" layoutX="805.0" layoutY="63.0" maxHeight="35.0" maxWidth="35.0" minHeight="5.0" minWidth="5.0" mnemonicParsing="false" onMouseClicked="#uploadList" prefHeight="35.0" prefWidth="35.0" />
 
-		<TextField fx:id="txtSearchBar" layoutX="623.0" layoutY="114.0" promptText="search" />
+		<TextField fx:id="txtSearchBar" layoutX="678.0" layoutY="108.0" promptText="search" />
 		<ComboBox fx:id="cmboxEntries" layoutX="179.0" layoutY="75.0" prefHeight="25.0" prefWidth="110.0" />
 		<Label layoutX="136.0" layoutY="79.0" prefHeight="17.0" prefWidth="43.0" text="Show" />
 		<Label layoutX="320.0" layoutY="79.0" prefHeight="17.0" prefWidth="69.0" text="entries" />
-		<Button fx:id="btnAddCollection" layoutX="133.0" layoutY="139.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="133.0" text="Add collection" />
-		<Label alignment="CENTER" layoutX="294.0" layoutY="144.0" prefHeight="34.0" prefWidth="495.0" style="-fx-border-image-width: 1px; -fx-border-color: gray; -fx-background-color: gray;" text="Floor price" textAlignment="CENTER">
+		<Button fx:id="btnAddCollection" layoutX="208.0" layoutY="140.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="132.0" text="Add collection" />
+		<Label alignment="CENTER" layoutX="350.0" layoutY="144.0" prefHeight="34.0" prefWidth="495.0" style="-fx-border-image-width: 1px; -fx-border-color: gray; -fx-background-color: gray;" text="Floor price" textAlignment="CENTER">
 			<font>
 				<Font size="22.0" />
 			</font>
 		</Label>
 
-		<Pagination fx:id="pagination" layoutX="55.0" layoutY="178.0" maxPageIndicatorCount="1" pageCount="1" prefHeight="248.0" prefWidth="800.0" />
-		<Label layoutX="129.0" layoutY="552.0" text="Send emails to" underline="true" />
-		<TextField fx:id="emails" layoutX="322.0" layoutY="558.0" prefHeight="31.0" prefWidth="133.0" />
-		<Button layoutX="455.0" layoutY="558.0" mnemonicParsing="false" onMouseClicked="#saveEmails" text="Save" />
-      <Label fx:id="SaveListlbl" layoutX="644.0" layoutY="27.0" text="Save List" />
-      <Label fx:id="uploadListlbl" layoutX="644.0" layoutY="65.0" text="Upload List" />
+		<Pagination fx:id="pagination" layoutX="38.0" layoutY="193.0" maxPageIndicatorCount="1" pageCount="1" prefHeight="228.0" prefWidth="818.0" />
+		<Label layoutX="119.0" layoutY="572.0" text="Send emails to" underline="true" />
+		<TextField fx:id="emails" layoutX="217.0" layoutY="572.0" minHeight="5.0" minWidth="5.0" prefHeight="21.0" prefWidth="124.0" />
+		<Button fx:id="btnSaveEmail" layoutX="457.0" layoutY="570.0" maxHeight="25.0" maxWidth="25.0" minHeight="5.0" minWidth="5.0" mnemonicParsing="false" onMouseClicked="#saveEmails" prefHeight="25.0" prefWidth="25.0" />
+      <Label fx:id="SaveListlbl" layoutX="731.0" layoutY="27.0" text="Save List" />
+      <Label fx:id="uploadListlbl" layoutX="731.0" layoutY="65.0" text="Upload List" />
+      <Label layoutX="492.0" layoutY="469.0" text="Save" />
+      <Label layoutX="492.0" layoutY="504.0" text="Save" />
+      <Label layoutX="492.0" layoutY="539.0" text="Save" />
+      <Label layoutX="492.0" layoutY="574.0" text="Save" />
+      <TextField fx:id="txtAddCollection" layoutX="70.0" layoutY="146.0" prefHeight="20.0" prefWidth="132.0" />
+      <Label fx:id="lblShowingCounter" layoutX="120.0" layoutY="404.0" text="Label" />
 
 	</children>
 	<padding>
