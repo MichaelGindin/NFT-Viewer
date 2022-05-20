@@ -6,17 +6,18 @@ public class EmailSender implements Runnable {
 
 	String[] sendTo;
 	ArrayList<NFTCollectionView> collections;
-	int threshold;
+	float threshold;
 	int sleepTime;
-
-	public EmailSender(String[] sendTo, ArrayList<NFTCollectionView> collections, int threshold, int sleepTime) {
+	ExternalServices ext = ExternalServices.getInstace();
+	
+	public EmailSender(String[] sendTo, ArrayList<NFTCollectionView> collections, float threshold, int sleepTime) {
 		this.sendTo = sendTo;
 		this.collections = collections;
 		this.threshold = threshold;
 		this.sleepTime = sleepTime;
 	}
 
-	public void updateFields(String[] sendTo, ArrayList<NFTCollectionView> collections, int threshold, int sleepTime) {
+	public void updateFields(String[] sendTo, ArrayList<NFTCollectionView> collections,float threshold, int sleepTime) {
 		this.sendTo = sendTo;
 		this.collections = collections;
 		this.threshold = threshold;
@@ -40,7 +41,7 @@ public class EmailSender implements Runnable {
 			}
 			if (count > 0)
 				for (String email : sendTo)
-					ExternalServices.sendMail(email, toSend);
+					ext.sendMail(email, toSend);
 			try {
 				Thread.sleep(sleepTime * 1000);
 				// Thread.sleep(sleepTime*1000);

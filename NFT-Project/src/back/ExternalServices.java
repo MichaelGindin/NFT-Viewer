@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.*;
@@ -26,8 +27,9 @@ public class ExternalServices {
 
 	public static final String from = "designpatterns111@outlook.co.il";
 	public static final String pass = "Ds123456+";
-
-	public static void sendMail(String sendTo, String toSend) {
+	private static final ExternalServices ext = new ExternalServices();
+	
+	public void sendMail(String sendTo, String toSend) {
 
 		// Assuming you are sending email from through gmails smtp
 		String host = "smtp.live.com";
@@ -78,7 +80,7 @@ public class ExternalServices {
 		}
 	}
 
-	public static void listToExcel(ArrayList<NFTCollectionView> rows) {
+	public void listToExcel(ArrayList<NFTCollectionView> rows) {
 		// Initialize a Workbook object
 		Workbook workbook = new Workbook();
 
@@ -111,7 +113,7 @@ public class ExternalServices {
 		}
 	}
 
-	public static ArrayList<NFTCollectionView> uploadList(String listName, int rowNum, int colNum) throws Exception {
+	public ArrayList<NFTCollectionView> uploadList(String listName, int rowNum, int colNum) throws Exception  {
 		FileInputStream fstream = new FileInputStream(listName + ".xlsx");
 
 		// Instantiating a Workbook object
@@ -134,21 +136,23 @@ public class ExternalServices {
 		for (int i = 1; i < dataTable.length; i++) {
 			if(dataTable[i][1]==null)
 				break;
-			float openSeaPrice = Float.parseFloat((String)dataTable[i][1]);
-			float magicEdenPrice = Float.parseFloat((String)dataTable[i][2]);
-			float diff = Float.parseFloat((String)dataTable[i][3]);
+
 			NFTCollectionView temp = new NFTCollectionView((String)dataTable[i][0],(String)dataTable[i][1] ,(String)dataTable[i][2], (String)dataTable[i][3]);
 			list.add(temp);
 		}
 		return list;
 	}
-
+	
+	public static ExternalServices getInstace() {
+		return ext;
+	}
 	public static void main(String[] args) throws Exception {
+		ExternalServices e = ExternalServices.getInstace();
 		NFTCollectionView col = new NFTCollectionView("a", "5", "3", (5 / 3) + "");
 		ArrayList<NFTCollectionView> a = new ArrayList<NFTCollectionView>();
 		a.add(col);
-		listToExcel(a);
-		ArrayList<NFTCollectionView> list = uploadList("collections", a.size(), 4);
+		e.listToExcel(a);
+		ArrayList<NFTCollectionView> list = e.uploadList("collections", a.size(), 4);
 		for(NFTCollectionView colo: list)
 			System.out.println(colo.getCollection_name()+" "+colo.getOpensea_price()+" "+colo.getMagic_eden_price()+" "+colo.getDiff());
 
