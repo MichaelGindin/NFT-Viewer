@@ -1,6 +1,8 @@
-package back;
+package utils;
 
 import java.util.ArrayList;
+
+import back.NFTCollectionView;
 
 public class EmailSender implements Runnable {
 

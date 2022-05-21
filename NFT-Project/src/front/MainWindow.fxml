@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="@text.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="back.MainWindowController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="@text.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="front.MainWindowController">
 	<children>
 		<Label fx:id="headerLabel" layoutX="294.0" layoutY="27.0" text="Top 1000 NFT Collections">
 			<font>
@@ -44,7 +44,7 @@
 			</font>
 		</Label>
 
-		<Pagination fx:id="pagination" layoutX="48.0" layoutY="178.0" maxPageIndicatorCount="1" pageCount="1" prefHeight="245.0" prefWidth="783.0" />
+		<Pagination fx:id="pagination" layoutX="65.0" layoutY="193.0" maxPageIndicatorCount="1" pageCount="1" prefHeight="245.0" prefWidth="783.0" />
 		<Label layoutX="65.0" layoutY="577.0" text="Send emails to" underline="true" />
 		<TextField fx:id="emails" layoutX="165.0" layoutY="577.0" minHeight="5.0" minWidth="5.0" prefHeight="21.0" prefWidth="124.0" />
 		<Button fx:id="btnSaveEmail" layoutX="390.0" layoutY="575.0" maxHeight="25.0" maxWidth="25.0" minHeight="5.0" minWidth="5.0" mnemonicParsing="false" onMouseClicked="#saveEmails" prefHeight="25.0" prefWidth="25.0" />
