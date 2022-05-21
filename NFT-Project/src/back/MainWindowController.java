@@ -377,8 +377,10 @@ public class MainWindowController {
 	private Node createPage(int pageIndex) {
 		int fromIndex = pageIndex * rawPerPage;
 		int toIndex = Math.min(fromIndex + rawPerPage, data.size());
+		int fromIndexToShow;
 		collectionTableView.setItems(FXCollections.observableArrayList(data.subList(fromIndex, toIndex)));
-		lblShowingCounter.setText("Showing "+ (fromIndex + 1) +" to "+ toIndex +" of "+data.size()+" entries");
+		fromIndexToShow=toIndex==0? 0:(fromIndex+1);
+		lblShowingCounter.setText("Showing "+ (fromIndexToShow) +" to "+ toIndex +" of "+data.size()+" entries");
 		
 		return collectionTableView;
 	}
