@@ -114,6 +114,7 @@ public class Manager extends Application {
 		primaryStage.setResizable(false);
 		MainWindowController mainWindowController = loader.getController();
 		mainWindowController.setComboBox();
+		mainWindowController.setCurrencyComboBox();
 		mainWindowController.start_data_to_Table();
 		mainWindowController.SetImage();
 		

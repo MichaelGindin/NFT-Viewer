@@ -56,6 +56,8 @@
       <Label layoutX="425.0" layoutY="579.0" text="Save" />
       <TextField fx:id="txtAddCollection" layoutX="70.0" layoutY="146.0" prefHeight="20.0" prefWidth="132.0" />
       <Label fx:id="lblShowingCounter" layoutX="65.0" layoutY="410.0" text="Label" />
+  	<Label layoutX="432.0" layoutY="79.0" prefHeight="17.0" prefWidth="61.0" text="Currency" />
+      <ComboBox fx:id="cmboxCurrenciesEntries" layoutX="501.0" layoutY="76.0" prefHeight="25.0" prefWidth="150.0" />
 
 	</children>
 	<padding>

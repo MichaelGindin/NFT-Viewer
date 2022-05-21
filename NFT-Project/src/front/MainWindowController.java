@@ -23,6 +23,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -30,7 +31,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import utils.EmailSender;
+import utils.ExchangeAdapter;
 import utils.ExternalServices;
 
 public class MainWindowController {
@@ -92,6 +96,9 @@ public class MainWindowController {
 	@FXML
 	private ComboBox<Integer> cmboxEntries;
 
+    @FXML
+    private ComboBox<String> cmboxCurrenciesEntries;
+    
 	@FXML
 	private Label headerLabel;
 
@@ -135,8 +142,8 @@ public class MainWindowController {
 	private Thread filler = null;
 	private int refreshTime;
 	private ExternalServices external = ExternalServices.getInstace();
-
-	
+	private String CoinType ="SOL";
+	private ExchangeAdapter exchangeAdapter = ExchangeAdapter.getInstance();
     @FXML
     void OnAddCollection(ActionEvent event) {
     	String collectionName = txtAddCollection.getText();
@@ -165,30 +172,39 @@ public class MainWindowController {
 	void OnRefreshBtnTimerClick(ActionEvent event) {
 		refreshTime = Integer.parseInt(txtRefreshTimer.getText());
 		System.out.println(refreshTime);
-
-//		timer.purge();
-//
-//		timer.scheduleAtFixedRate(new TimerTask() {
-//			@Override
-//			public void run() {
-//				executorService.submit(new Runnable() {
-//
-//					@Override
-//					public void run() {
-//						fillData();
-//					}
-//				});
-//				try {
-//					executorService.awaitTermination(1000, null);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		}, 120 * 1000, refreshTime * 1000);
+	
 
 	}
+	
+	public void ChangeCurrency() {
+		ObservableList<TableColumn<NFTCollectionView, ?>>  cols = collectionTableView.getColumns();
+		TableColumn<NFTCollectionView, ?> openSeaCol = cols.get(1);
+		TableColumn<NFTCollectionView, ?> magicEdenCol = cols.get(2);
+		
+		openSeaCol.setText("Opensea price["+CoinType+"]");
+		magicEdenCol.setText("Magic eden price["+CoinType+"]");
+		
+	}
+	
+	public void setCurrencyComboBox() {
+	
+		cmboxCurrenciesEntries.getItems().addAll("SOL","ETH", "USD","EUR");
+		cmboxCurrenciesEntries.setValue("SOL");
+		cmboxCurrenciesEntries.valueProperty().addListener(new ChangeListener<String>() {
 
+			@Override
+			public void changed(ObservableValue<? extends String> arg0, String oldValue, String newValue) {
+				// TODO Auto-generated method stub
+				CoinType=newValue;
+				
+				
+				ChangeCurrency();
+			}
+			
+		}
+
+		);
+	}
 	/*
 	 * private void initializeTable() { collectionNameCol.setCellValueFactory(new
 	 * PropertyValueFactory<NFTCollectionView, String>("collection_name"));
@@ -215,24 +231,65 @@ public class MainWindowController {
 	@SuppressWarnings("unchecked")
 	private TableView<NFTCollectionView> createTable() {
 		TableView<NFTCollectionView> table = new TableView<>();
-
+		CoinType ="SOL";
 		TableColumn<NFTCollectionView, String> collectionNameCol = new TableColumn<>("Collection name");
 		collectionNameCol.setSortable(false);
 		collectionNameCol.setCellValueFactory(new PropertyValueFactory<>("collection_name"));
 		collectionNameCol.setPrefWidth(200);
 		
-		TableColumn<NFTCollectionView, String> openseaCol = new TableColumn<>("Opensea price[SOL]");
+		TableColumn<NFTCollectionView, String> openseaCol = new TableColumn<>("Opensea price["+CoinType+"]");
 		openseaCol.setCellValueFactory(new PropertyValueFactory<NFTCollectionView, String>("opensea_price"));
 		openseaCol.setPrefWidth(200);
 
-		TableColumn<NFTCollectionView, String> magicEdenCol = new TableColumn<>("Magic eden price[SOL]");
+		TableColumn<NFTCollectionView, String> magicEdenCol = new TableColumn<>("Magic eden price["+CoinType+"]");
 		magicEdenCol.setCellValueFactory(new PropertyValueFactory<NFTCollectionView, String>("magic_eden_price"));
 		magicEdenCol.setPrefWidth(200);
 
 		TableColumn<NFTCollectionView, String> diffCol = new TableColumn<>("Diff[%]");
 		diffCol.setCellValueFactory(new PropertyValueFactory<NFTCollectionView, String>("diff"));
 		diffCol.setPrefWidth(200);
+		diffCol.setCellFactory(new Callback<TableColumn<NFTCollectionView,String>,
+				TableCell<NFTCollectionView,String>>() {
+			
+			@Override
+			public TableCell<NFTCollectionView, String> call(
+					TableColumn<NFTCollectionView, String> param) {
+				return new TableCell<NFTCollectionView, String>(){
+					  @Override
+	                   protected void updateItem(String item, boolean empty) {
+						  if (!empty) {
+							  int currentIndex = indexProperty()
+	                                    .getValue() < 0 ? 0
+	                                    : indexProperty().getValue();
+							  if(item!=null) {
+								  if(item=="-") {
+									  setStyle(" -fx-text-fill: white");
+								  }
+								  else if(item.contains("+")&& item.contains(".")) {
+									 
+		                              setStyle(" -fx-text-fill: green");
+								  }
+								  else if(item.contains("-") && item.contains(".")) {
+									 
+									  setStyle(" -fx-text-fill: red");
+								  }
+								  else{
+									  setStyle(" -fx-text-fill: white");
+								  }
+								  setText(item);
+							  }
+							 
+						  }
+					  }
+				};
+				
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
 		table.getColumns().addAll(collectionNameCol, openseaCol, magicEdenCol, diffCol);
+		
 		return table;
 	}
 
@@ -277,7 +334,7 @@ public class MainWindowController {
 	public void Update() {
 
 		this.rawPerPage = cmboxEntries.getValue();
-
+		
 		data.clear();
 		Platform.runLater(() -> {
 			for (String collectionName : runner.safeConstCollection.keySet()) {
@@ -290,11 +347,11 @@ public class MainWindowController {
 				if (collection.getFloorPriceOpenSea() == 0)
 					opensea_price = "N/A";
 				else
-					opensea_price = String.format("%.3f", collection.getFloorPriceOpenSea());
+					opensea_price = String.format("%.3f", exchangeAdapter.Convert( "SOL",CoinType,collection.getFloorPriceOpenSea()));
 				if (collection.getFloorPriceMagicEden() == 0)
 					magic_eden_price = "N/A";
 				else
-					magic_eden_price = String.format("%.3f", collection.getFloorPriceMagicEden());
+					magic_eden_price = String.format("%.3f", exchangeAdapter.Convert("SOL",CoinType,collection.getFloorPriceMagicEden()));
 				if (collection.getFloorPriceOpenSea() == 0 || collection.getFloorPriceMagicEden() == 0)
 					diff = "-";
 				else if (collection.getDiff() > 0) {
@@ -318,11 +375,11 @@ public class MainWindowController {
 				if (collection.getFloorPriceOpenSea() == 0)
 					opensea_price = "N/A";
 				else
-					opensea_price = String.format("%.3f", collection.getFloorPriceOpenSea());
+					opensea_price = String.format("%.3f", exchangeAdapter.Convert("SOL",CoinType ,collection.getFloorPriceOpenSea()));
 				if (collection.getFloorPriceMagicEden() == 0)
 					magic_eden_price = "N/A";
 				else
-					magic_eden_price = String.format("%.3f", collection.getFloorPriceMagicEden());
+					magic_eden_price = String.format("%.3f", exchangeAdapter.Convert("SOL", CoinType,collection.getFloorPriceMagicEden()));
 				if (collection.getFloorPriceOpenSea() == 0 || collection.getFloorPriceMagicEden() == 0)
 					diff = "-";
 				else if (collection.getDiff() > 0) {
@@ -345,6 +402,7 @@ public class MainWindowController {
 //		}
 		Platform.runLater(() -> pagination.setPageFactory(this::createPage));
 		Platform.runLater(() -> System.out.println("done filling"));
+		
 		// initializeTable();
 	}
 
@@ -539,8 +597,8 @@ public class MainWindowController {
 	    	
 	    	
 	    	TableColumn<NFTCollectionView, String> collectionNameCol = new TableColumn<>("Collection name");
-			TableColumn<NFTCollectionView, Float> openseaCol = new TableColumn<>("Opensea price[SOL]");
-			TableColumn<NFTCollectionView, Float> magicEdenCol = new TableColumn<>("Magic eden price[SOL]");
+			TableColumn<NFTCollectionView, Float> openseaCol = new TableColumn<>("Opensea price["+CoinType+"]");
+			TableColumn<NFTCollectionView, Float> magicEdenCol = new TableColumn<>("Magic eden price["+CoinType+"]");
 			TableColumn<NFTCollectionView, Float> diffCol = new TableColumn<>("Diff[%]");
 			
 			
