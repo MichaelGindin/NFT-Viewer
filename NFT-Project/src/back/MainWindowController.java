@@ -131,6 +131,31 @@ public class MainWindowController {
 	private int refreshTime;
 	private ExternalServices external = ExternalServices.getInstace();
 
+	
+    @FXML
+    void OnAddCollection(ActionEvent event) {
+    	String collectionName = txtAddCollection.getText();
+    	System.out.println("Event triggered value:" +collectionName);
+    	if(collectionName==null ||collectionName.isEmpty() ) {
+    		return;
+    	}
+    	
+   
+    	System.out.println("Before adding");
+    //add values for collection 
+    	//call for runner service to update
+    	runner.addConstCollection(collectionName);
+    	System.out.println("suppose to be added");
+    	if(runner.safeConstCollection.containsKey(collectionName.toLowerCase().trim())){
+    		System.out.println("Added");
+    	}
+    	
+    	
+    	
+    	
+    	
+    }
+
 	@FXML
 	void OnRefreshBtnTimerClick(ActionEvent event) {
 		refreshTime = Integer.parseInt(txtRefreshTimer.getText());
@@ -249,6 +274,34 @@ public class MainWindowController {
 
 		data.clear();
 		Platform.runLater(() -> {
+			for (String collectionName : runner.safeConstCollection.keySet()) {
+				Collection collection = runner.safeConstCollection.get(collectionName);
+				String collection_name;
+				String opensea_price;
+				String magic_eden_price;
+				String diff;
+				collection_name = collection.getName();
+				if (collection.getFloorPriceOpenSea() == 0)
+					opensea_price = "N/A";
+				else
+					opensea_price = String.format("%.3f", collection.getFloorPriceOpenSea());
+				if (collection.getFloorPriceMagicEden() == 0)
+					magic_eden_price = "N/A";
+				else
+					magic_eden_price = String.format("%.3f", collection.getFloorPriceMagicEden());
+				if (collection.getFloorPriceOpenSea() == 0 || collection.getFloorPriceMagicEden() == 0)
+					diff = "-";
+				else if (collection.getDiff() > 0) {
+					String temp = String.format("%.3f", collection.getDiff());
+					diff = "+" + temp;
+				} else {
+					diff = String.format("%.3f", collection.getDiff());
+				}
+				data.add(new NFTCollectionView(collection_name, opensea_price, magic_eden_price, diff));
+			}
+
+		});
+		Platform.runLater(() -> {
 			for (String collectionName : runner.safeCollection.keySet()) {
 				Collection collection = runner.safeCollection.get(collectionName);
 				String collection_name;
@@ -276,8 +329,8 @@ public class MainWindowController {
 			}
 
 		});
-		Platform.runLater(() -> pagination.setPageCount((data.size() / (rawPerPage))));
-		Platform.runLater(() -> pagination.setMaxPageIndicatorCount((data.size() / (rawPerPage))));
+		Platform.runLater(() -> pagination.setPageCount((int)Math.ceil(data.size() / ((double)rawPerPage))));
+		Platform.runLater(() -> pagination.setMaxPageIndicatorCount((int)Math.ceil(data.size() / ((double)rawPerPage))));
 //		for (int i = 0; i < 150; i++) {
 //			data.add(new NFTCollectionView("temp", new Float(5.5), new Float(5.5), new Float(i)));
 //			data.add(new NFTCollectionView("temp1", new Float(5.5), new Float(5.5), new Float(i + 1)));
@@ -292,8 +345,9 @@ public class MainWindowController {
 	public void start_data_to_Table() {
 		refreshTime = 60;
 		pagination.autosize();
-		pagination.setPageCount((data.size() / (rawPerPage)));
-		pagination.setMaxPageIndicatorCount((data.size() / (rawPerPage)));
+		pagination.setPageCount((int)Math.ceil(data.size() / ((double)rawPerPage)));
+		pagination.setMaxPageIndicatorCount((int)Math.ceil(data.size() / ((double)rawPerPage)));
+
 		this.rawPerPage = cmboxEntries.getValue();
 		runner = new RunnerService();
 		txtRefreshTimer.setText(60 + "");
@@ -391,10 +445,16 @@ public class MainWindowController {
 	@FXML
 	void uploadList(MouseEvent event) {
 		try {
-			ObservableList<NFTCollectionView> list = FXCollections
-					.observableList(external.uploadList("collections", rawPerPage, 4));
-
-			collectionTableView.setItems(list);
+			ArrayList<NFTCollectionView> temp = external.uploadList("collections", rawPerPage, 4);
+			
+			for (NFTCollectionView nftCollectionView : temp) {
+				runner.addConstCollection(nftCollectionView.getCollection_name().toLowerCase());
+			}
+//			
+//			ObservableList<NFTCollectionView> list = FXCollections
+//					.observableList(external.uploadList("collections", rawPerPage, 4));
+//
+//			collectionTableView.setItems(list);
 		} catch (Exception e) {
 			System.out.println("Save a list and try again");
 		}
@@ -468,7 +528,7 @@ public class MainWindowController {
 
 	    @FXML
 	    void SearchTable(KeyEvent event) {
-	    	String SearchText = txtSearchBar.getText();
+	    	String SearchText = txtSearchBar.getText().toLowerCase();
 	    	//System.out.println(SearchText);
 	    	
 	    	
@@ -485,6 +545,7 @@ public class MainWindowController {
 			
 	    	FilteredList<NFTCollectionView> filteredData = new FilteredList<>(data, p -> true);
 	    	txtSearchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+	    		
 	    		filteredData.setPredicate(data -> {
 	    		// If filter text is empty, display all data.
 				if (newValue == null || newValue.isEmpty()) {

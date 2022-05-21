@@ -2,6 +2,8 @@ package back;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,13 +11,73 @@ import java.util.concurrent.Executors;
 public class RunnerService implements Runnable {
 	public ArrayList<Collection> Collections = null;
 	public ConcurrentHashMap<String, Collection> safeCollection = new ConcurrentHashMap<String, Collection>();
-
+	public ConcurrentHashMap<String, Collection> safeConstCollection = new ConcurrentHashMap<String, Collection>();
+	public Set<String> constList = new HashSet<String>();
+	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+		StartFillingConstantData();
 		StartFillingData();
 	}
+	
+	public void addConstCollection(String name) {
+		constList.add(name.toLowerCase().trim());
+		
+	}
+	public void StartFillingConstantData() {
+		if(constList.isEmpty())return;
+		safeConstCollection = new ConcurrentHashMap<String, Collection>();
+		MagicEdenManager magicEdenManager = new MagicEdenManager();
+		OpenSeaManager openSeaManager = new OpenSeaManager();
 
+		
+		ArrayList<String> names = new ArrayList<String>(constList);
+	
+	
+
+		Thread[] workers = new Thread[names.size()];
+
+		for (int i = 0; i < names.size(); i++) {
+
+			int index = i;
+			workers[index]= new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					String name = names.get(index);
+					String symbol = name.trim().replace(' ','_').toLowerCase();
+					
+				
+
+					Double magicPrice = magicEdenManager.getPriceMagicEden(symbol);
+					Double openSeaPrice = openSeaManager.getPriceOpenSea(name);
+					
+					if (magicPrice == null && openSeaPrice == null) {
+						return;
+					}
+					
+					Collection newCollection =null;
+					if(magicPrice==null) {
+						newCollection = new Collection(symbol, name, 0, openSeaPrice);
+					}
+					else if(openSeaPrice==null) {
+						newCollection = new Collection(symbol, name, magicPrice,0);
+					}
+					else {
+						newCollection = new Collection(symbol, name, magicPrice, openSeaPrice);
+//						safeCollection.put(name, newCollection);
+					}
+					safeConstCollection.put(name, newCollection);
+
+				}
+			});
+			workers[index].start();
+				
+	}
+	}
+	
+	
 	public void StartFillingData() {
 		safeCollection = new ConcurrentHashMap<String, Collection>();
 		MagicEdenManager magicEdenManager = new MagicEdenManager();

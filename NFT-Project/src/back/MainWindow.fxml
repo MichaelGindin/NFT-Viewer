@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="@text.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="back.MainWindowController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="@text.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="back.MainWindowController">
 	<children>
 		<Label fx:id="headerLabel" layoutX="294.0" layoutY="27.0" text="Top 1000 NFT Collections">
 			<font>
@@ -37,7 +37,7 @@
 		<ComboBox fx:id="cmboxEntries" layoutX="179.0" layoutY="75.0" prefHeight="25.0" prefWidth="110.0" />
 		<Label layoutX="136.0" layoutY="79.0" prefHeight="17.0" prefWidth="43.0" text="Show" />
 		<Label layoutX="320.0" layoutY="79.0" prefHeight="17.0" prefWidth="69.0" text="entries" />
-		<Button fx:id="btnAddCollection" layoutX="208.0" layoutY="140.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="132.0" text="Add collection" />
+		<Button fx:id="btnAddCollection" layoutX="208.0" layoutY="140.0" mnemonicParsing="false" onAction="#OnAddCollection" prefHeight="20.0" prefWidth="132.0" text="Add collection" />
 		<Label alignment="CENTER" layoutX="350.0" layoutY="144.0" prefHeight="34.0" prefWidth="495.0" style="-fx-border-image-width: 1px; -fx-border-color: gray; -fx-background-color: gray;" text="Floor price" textAlignment="CENTER">
 			<font>
 				<Font size="22.0" />
