@@ -11,6 +11,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -23,6 +25,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 public class MainWindowController {
@@ -455,4 +458,45 @@ public class MainWindowController {
 	        btnSaveEmail.setGraphic(imageViewSettings4);
 	    }
 	 
+
+//	    @FXML
+//	    void SearchTable(KeyEvent event) {
+//	    	String SearchText = txtSearchBar.getText();
+//	    	//System.out.println(SearchText);
+//	    	
+//	    	
+//	    	TableColumn<NFTCollectionView, String> collectionNameCol = new TableColumn<>("Collection name");
+//			TableColumn<NFTCollectionView, Float> openseaCol = new TableColumn<>("Opensea price[SOL]");
+//			TableColumn<NFTCollectionView, Float> magicEdenCol = new TableColumn<>("Magic eden price[SOL]");
+//			
+//			collectionNameCol.setCellValueFactory(new PropertyValueFactory<>("collection_name"));
+//			openseaCol.setCellValueFactory(new PropertyValueFactory<NFTCollectionView, Float>("opensea_price"));
+//			magicEdenCol.setCellValueFactory(new PropertyValueFactory<NFTCollectionView, Float>("magic_eden_price"));
+//			
+//	    	FilteredList<NFTCollectionView> filteredData = new FilteredList<>(data, p -> true);
+//	    	txtSearchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+//	    		filteredData.setPredicate(data -> {
+//	    		// If filter text is empty, display all data.
+//				if (newValue == null || newValue.isEmpty()) {
+//					return true;
+//				}
+//				if (data.getCollection_name().toLowerCase().contains(SearchText)) {
+//					return true; // Filter matches collection name.
+//				} 
+//				else if (data.getMagic_eden_price().toLowerCase().contains(SearchText)) {
+//					return true; // Filter matches magic eden price .
+//				}
+//	    		 else if (data.getOpensea_price().toLowerCase().contains(SearchText)) {
+//					return true; // Filter matches open sea price .
+//	    		 }
+//				return false; // Does not match.
+//			});
+//		});
+//	    	
+//	    	SortedList<NFTCollectionView> sortedData = new SortedList<>(filteredData);
+//			sortedData.comparatorProperty().bind(collectionTableView.comparatorProperty());
+//
+//	    
+//	    }
 }
+
