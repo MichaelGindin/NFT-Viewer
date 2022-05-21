@@ -94,16 +94,16 @@ public class MainWindowController {
 	private Pagination pagination;
 
 	@FXML
-	private TextField  txtEmailTimer;
+	private TextField txtEmailTimer;
 
 	@FXML
-	private TextField  txtRefreshTimer;
+	private TextField txtRefreshTimer;
 
 	@FXML
 	private TextField txtSearchBar;
 
 	@FXML
-	private TextField  txtThreshold;
+	private TextField txtThreshold;
 
 	@FXML
 	private TextField emails;
@@ -127,9 +127,10 @@ public class MainWindowController {
 	private static String[] emailArray = new String[1];
 	private EmailSender send;
 	private boolean emailTheradFlag = false;
-	private Thread filler= null;
+	private Thread filler = null;
 	private int refreshTime;
-	
+	private ExternalServices external = ExternalServices.getInstace();
+
 	@FXML
 	void OnRefreshBtnTimerClick(ActionEvent event) {
 		refreshTime = Integer.parseInt(txtRefreshTimer.getText());
@@ -210,28 +211,27 @@ public class MainWindowController {
 		try {
 			runner.run();
 
-			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.err.println(e.getMessage());
 		}
-/*
-		Platform.runLater(() -> {
-			List<String> collectionNames = new ArrayList<String>(runner.safeCollection.keySet());
-			Collections.sort(collectionNames);
-
-			for (String collectionName : collectionNames) {
-				Collection collection = runner.safeCollection.get(collectionName);
-				data.add(new NFTCollectionView(collection.getName(), (float) collection.getFloorPriceOpenSea(),
-						(float) collection.getFloorPriceMagicEden(), (float) collection.getDiff() * 100));
-			}
-		});
-		System.out.println(pagination.getPageCount());
-		Platform.runLater(() -> pagination.setPageCount(collectionTableView.getItems().size() / rawPerPage));
-		Platform.runLater(() -> System.out.println(pagination.getPageCount()));
-		Platform.runLater(() -> pagination.setMaxPageIndicatorCount((data.size() / (rawPerPage))));
-		
-		*/
+		/*
+		 * Platform.runLater(() -> { List<String> collectionNames = new
+		 * ArrayList<String>(runner.safeCollection.keySet());
+		 * Collections.sort(collectionNames);
+		 * 
+		 * for (String collectionName : collectionNames) { Collection collection =
+		 * runner.safeCollection.get(collectionName); data.add(new
+		 * NFTCollectionView(collection.getName(), (float)
+		 * collection.getFloorPriceOpenSea(), (float)
+		 * collection.getFloorPriceMagicEden(), (float) collection.getDiff() * 100)); }
+		 * }); System.out.println(pagination.getPageCount()); Platform.runLater(() ->
+		 * pagination.setPageCount(collectionTableView.getItems().size() / rawPerPage));
+		 * Platform.runLater(() -> System.out.println(pagination.getPageCount()));
+		 * Platform.runLater(() -> pagination.setMaxPageIndicatorCount((data.size() /
+		 * (rawPerPage))));
+		 * 
+		 */
 //		for (int i = 0; i < 150; i++) {
 //			data.add(new NFTCollectionView("temp", new Float(5.5), new Float(5.5), new Float(i)));
 //			data.add(new NFTCollectionView("temp1", new Float(5.5), new Float(5.5), new Float(i + 1)));
@@ -256,21 +256,21 @@ public class MainWindowController {
 				String magic_eden_price;
 				String diff;
 				collection_name = collection.getName();
-				if(collection.getFloorPriceOpenSea() == 0 )
+				if (collection.getFloorPriceOpenSea() == 0)
 					opensea_price = "N/A";
-				else 
+				else
 					opensea_price = String.format("%.3f", collection.getFloorPriceOpenSea());
-				if(collection.getFloorPriceMagicEden() == 0)
+				if (collection.getFloorPriceMagicEden() == 0)
 					magic_eden_price = "N/A";
 				else
-					magic_eden_price = String.format("%.3f",collection.getFloorPriceMagicEden());
-				if(collection.getFloorPriceOpenSea() == 0 || collection.getFloorPriceMagicEden() == 0)
+					magic_eden_price = String.format("%.3f", collection.getFloorPriceMagicEden());
+				if (collection.getFloorPriceOpenSea() == 0 || collection.getFloorPriceMagicEden() == 0)
 					diff = "-";
-				else if(collection.getDiff() > 0) {
-					String temp = String.format("%.3f", collection.getDiff());  
+				else if (collection.getDiff() > 0) {
+					String temp = String.format("%.3f", collection.getDiff());
 					diff = "+" + temp;
-				}else {
-					diff = String.format("%.3f", collection.getDiff());  
+				} else {
+					diff = String.format("%.3f", collection.getDiff());
 				}
 				data.add(new NFTCollectionView(collection_name, opensea_price, magic_eden_price, diff));
 			}
@@ -290,29 +290,28 @@ public class MainWindowController {
 	}
 
 	public void start_data_to_Table() {
-		refreshTime= 60;
+		refreshTime = 60;
 		pagination.autosize();
 		pagination.setPageCount((data.size() / (rawPerPage)));
 		pagination.setMaxPageIndicatorCount((data.size() / (rawPerPage)));
 		this.rawPerPage = cmboxEntries.getValue();
 		runner = new RunnerService();
 		txtRefreshTimer.setText(60 + "");
-		
-		filler= new Thread(new Runnable() {
-			
+
+		filler = new Thread(new Runnable() {
+
 			@Override
 			public void run() {
 
-				while(true) {
+				while (true) {
 					fillData();
 					System.out.println("Start to update");
 					Update();
-					
+
 					try {
 
-						System.out.println("Referesh time is:"+refreshTime);
-						Thread.sleep(refreshTime*1000);
-						
+						System.out.println("Referesh time is:" + refreshTime);
+						Thread.sleep(refreshTime * 1000);
 
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
@@ -323,10 +322,9 @@ public class MainWindowController {
 
 			}
 		});
-		
-		
+
 		filler.start();
-		
+
 //		
 //		worker.submit(new Runnable() {
 //
@@ -387,25 +385,25 @@ public class MainWindowController {
 
 	@FXML
 	void saveAsList(MouseEvent event) {
-		ExternalServices.listToExcel(new ArrayList<NFTCollectionView>(collectionTableView.getItems()));
+		external.listToExcel(new ArrayList<NFTCollectionView>(collectionTableView.getItems()));
 	}
 
 	@FXML
 	void uploadList(MouseEvent event) {
 		try {
 			ObservableList<NFTCollectionView> list = FXCollections
-					.observableList(ExternalServices.uploadList("collections", rawPerPage, 4));
+					.observableList(external.uploadList("collections", rawPerPage, 4));
 
 			collectionTableView.setItems(list);
 		} catch (Exception e) {
-			e.printStackTrace();
-			//System.out.println("There is not any list in this name");
+			System.out.println("Save a list and try again");
 		}
 	}
 
 	@FXML
 	void saveEmails(MouseEvent event) {
-		if (emails.getText().length() != 0&& txtEmailTimer.getText().length() != 0&&txtThreshold.getText().length() != 0) {
+		if (emails.getText().length() != 0 && txtEmailTimer.getText().length() != 0
+				&& txtThreshold.getText().length() != 0) {
 			String text = emails.getText();
 			if (text.contains(";"))
 				emailArray = text.split(";");
@@ -413,38 +411,44 @@ public class MainWindowController {
 				emailArray[0] = text;
 
 			ArrayList<NFTCollectionView> collections = new ArrayList<NFTCollectionView>(collectionTableView.getItems());
-			int threshold = Integer.parseInt(txtThreshold.getText());
-			int sleepTime = Integer.parseInt(txtEmailTimer.getText());
+			float threshold = 0;
+			int sleepTime = 60;
+			try {
+				threshold = Float.parseFloat(txtThreshold.getText());
+				sleepTime = Integer.parseInt(txtEmailTimer.getText());
+			} catch (NumberFormatException e) {
+				System.out.println("please enter only numbers");
+			}
 			send = new EmailSender(emailArray, collections, threshold, sleepTime);
 			Thread t;
 			if (!emailTheradFlag) {
 				emailTheradFlag = true;// doesn't need another thread
 				t = new Thread(send);
 				t.start();
-			}
-			else
+			} else
 				updateEmailFields();
 		}
 	}
-	
+
 	@FXML
-    void updateEmailTimer(MouseEvent event) {
-		if(emailTheradFlag)
+	void updateEmailTimer(MouseEvent event) {
+		if (emailTheradFlag)
 			updateEmailFields();
-    }
-	
+	}
+
 	void updateEmailFields() {
+		float threshold = 0;
+		int sleepTime = 60;
 		ArrayList<NFTCollectionView> collections = new ArrayList<NFTCollectionView>(collectionTableView.getItems());
-		int threshold = Integer.parseInt(txtThreshold.getText());
-		int sleepTime = Integer.parseInt(txtEmailTimer.getText());
+		try {
+			threshold = Float.parseFloat(txtThreshold.getText());
+			sleepTime = Integer.parseInt(txtEmailTimer.getText());
+		} catch (NumberFormatException e) {
+			System.out.println("please enter only numbers");
+		}
 		send.updateFields(emailArray, collections, threshold, sleepTime);
 	}
-	
-	 @FXML
-	    void updateThreshold(MouseEvent event) {
-		 if(emailTheradFlag)
-				updateEmailFields();
-	    }
+
 	 public void SetImage (){
 	        ImageView imageViewSave = new ImageView(getClass().getResource("../Icons/SavListIcon_1.png").toExternalForm());
 	        btnSaveList.setGraphic(imageViewSave);
@@ -460,6 +464,7 @@ public class MainWindowController {
 	        btnSaveEmail.setGraphic(imageViewSettings4);
 	    }
 	 
+
 
 	    @FXML
 	    void SearchTable(KeyEvent event) {
@@ -507,5 +512,14 @@ public class MainWindowController {
 			collectionTableView.setItems(sortedData);
 	    
 	    }
+
+
+
+	@FXML
+	void updateThreshold(MouseEvent event) {
+		if (emailTheradFlag)
+			updateEmailFields();
+	}
+
 }
 
