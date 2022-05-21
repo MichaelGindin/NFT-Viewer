@@ -113,6 +113,8 @@ public class Manager extends Application {
 		MainWindowController mainWindowController = loader.getController();
 		mainWindowController.setComboBox();
 		mainWindowController.start_data_to_Table();
+		mainWindowController.SetImage();
+		
 	}
 }
 
