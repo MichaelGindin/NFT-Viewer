@@ -459,44 +459,51 @@ public class MainWindowController {
 	    }
 	 
 
-//	    @FXML
-//	    void SearchTable(KeyEvent event) {
-//	    	String SearchText = txtSearchBar.getText();
-//	    	//System.out.println(SearchText);
-//	    	
-//	    	
-//	    	TableColumn<NFTCollectionView, String> collectionNameCol = new TableColumn<>("Collection name");
-//			TableColumn<NFTCollectionView, Float> openseaCol = new TableColumn<>("Opensea price[SOL]");
-//			TableColumn<NFTCollectionView, Float> magicEdenCol = new TableColumn<>("Magic eden price[SOL]");
-//			
-//			collectionNameCol.setCellValueFactory(new PropertyValueFactory<>("collection_name"));
-//			openseaCol.setCellValueFactory(new PropertyValueFactory<NFTCollectionView, Float>("opensea_price"));
-//			magicEdenCol.setCellValueFactory(new PropertyValueFactory<NFTCollectionView, Float>("magic_eden_price"));
-//			
-//	    	FilteredList<NFTCollectionView> filteredData = new FilteredList<>(data, p -> true);
-//	    	txtSearchBar.textProperty().addListener((observable, oldValue, newValue) -> {
-//	    		filteredData.setPredicate(data -> {
-//	    		// If filter text is empty, display all data.
-//				if (newValue == null || newValue.isEmpty()) {
-//					return true;
-//				}
-//				if (data.getCollection_name().toLowerCase().contains(SearchText)) {
-//					return true; // Filter matches collection name.
-//				} 
-//				else if (data.getMagic_eden_price().toLowerCase().contains(SearchText)) {
-//					return true; // Filter matches magic eden price .
-//				}
-//	    		 else if (data.getOpensea_price().toLowerCase().contains(SearchText)) {
-//					return true; // Filter matches open sea price .
-//	    		 }
-//				return false; // Does not match.
-//			});
-//		});
-//	    	
-//	    	SortedList<NFTCollectionView> sortedData = new SortedList<>(filteredData);
-//			sortedData.comparatorProperty().bind(collectionTableView.comparatorProperty());
-//
-//	    
-//	    }
+	    @FXML
+	    void SearchTable(KeyEvent event) {
+	    	String SearchText = txtSearchBar.getText();
+	    	//System.out.println(SearchText);
+	    	
+	    	
+	    	TableColumn<NFTCollectionView, String> collectionNameCol = new TableColumn<>("Collection name");
+			TableColumn<NFTCollectionView, Float> openseaCol = new TableColumn<>("Opensea price[SOL]");
+			TableColumn<NFTCollectionView, Float> magicEdenCol = new TableColumn<>("Magic eden price[SOL]");
+			TableColumn<NFTCollectionView, Float> diffCol = new TableColumn<>("Diff[%]");
+			
+			
+			collectionNameCol.setCellValueFactory(new PropertyValueFactory<>("collection_name"));
+			openseaCol.setCellValueFactory(new PropertyValueFactory<NFTCollectionView, Float>("opensea_price"));
+			magicEdenCol.setCellValueFactory(new PropertyValueFactory<NFTCollectionView, Float>("magic_eden_price"));
+			diffCol.setCellValueFactory(new PropertyValueFactory<NFTCollectionView, Float>("diff"));
+			
+	    	FilteredList<NFTCollectionView> filteredData = new FilteredList<>(data, p -> true);
+	    	txtSearchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+	    		filteredData.setPredicate(data -> {
+	    		// If filter text is empty, display all data.
+				if (newValue == null || newValue.isEmpty()) {
+					return true;
+				}
+				if (data.getCollection_name().toLowerCase().contains(SearchText)) {
+					return true; // Filter matches collection name.
+				} 
+				else if (data.getMagic_eden_price().toLowerCase().contains(SearchText)) {
+					return true; // Filter matches magic eden price .
+				}
+	    		 else if (data.getOpensea_price().toLowerCase().contains(SearchText)) {
+					return true; // Filter matches open sea price .
+	    		 }
+	    		 else if (data.getDiff().toLowerCase().contains(SearchText)) {
+						return true; // Filter matches diff .
+	    		 }
+				return false; // Does not match.
+			});
+		});
+	    	
+	    	SortedList<NFTCollectionView> sortedData = new SortedList<>(filteredData);
+			sortedData.comparatorProperty().bind(collectionTableView.comparatorProperty());
+			
+			collectionTableView.setItems(sortedData);
+	    
+	    }
 }
 
