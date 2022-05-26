@@ -30,7 +30,7 @@ public class ExternalServices {
 	public static final String from = "designpatterns111@outlook.co.il";
 	public static final String pass = "Ds123456+";
 	private static final ExternalServices ext = new ExternalServices();
-	
+
 	public void sendMail(String sendTo, String toSend) {
 
 		// Assuming you are sending email from through gmails smtp
@@ -54,7 +54,7 @@ public class ExternalServices {
 		});
 
 		// Used to debug SMTP issues
-		session.setDebug(true);
+		// session.setDebug(true);
 
 		try {
 
@@ -115,7 +115,7 @@ public class ExternalServices {
 		}
 	}
 
-	public ArrayList<NFTCollectionView> uploadList(String listName, int rowNum, int colNum) throws Exception  {
+	public ArrayList<NFTCollectionView> uploadList(String listName, int rowNum, int colNum) throws Exception {
 		FileInputStream fstream = new FileInputStream(listName + ".xlsx");
 
 		// Instantiating a Workbook object
@@ -124,30 +124,32 @@ public class ExternalServices {
 		// Accessing the first worksheet in the Excel file
 		Worksheet worksheet = workbook.getWorksheets().get(0);
 
-		// Exporting the contents of 7 rows and 2 columns starting from 1st cell
-		// to Array.
 		Object dataTable[][] = worksheet.getCells().exportArray(0, 0, rowNum, colNum);
-
-		// Printing the number of rows exported
-		System.out.println("No. Of Rows Exported: " + dataTable.length);
 
 		// Closing the file stream to free all resources
 		fstream.close();
-		// System.out.println(jsonName + ".json file written successfully...\n");
+
 		ArrayList<NFTCollectionView> list = new ArrayList<>();
 		for (int i = 1; i < dataTable.length; i++) {
-			if(dataTable[i][1]==null)
+			if (dataTable[i][1] == null)
 				break;
-
-			NFTCollectionView temp = new NFTCollectionView((String)dataTable[i][0],(String)dataTable[i][1] ,(String)dataTable[i][2], (String)dataTable[i][3]);
+			NFTCollectionView temp;
+			if (dataTable[i][1] instanceof Integer)
+				temp = new NFTCollectionView((String) dataTable[i][0], ((Integer) dataTable[i][1]).toString(),
+						((Integer) dataTable[i][2]).toString(), ((Integer) dataTable[i][3]).toString());
+			else
+				temp = new NFTCollectionView((String) dataTable[i][0], (String) dataTable[i][1],
+						(String) dataTable[i][2], (String) dataTable[i][3]);
 			list.add(temp);
 		}
+		
 		return list;
 	}
-	
+
 	public static ExternalServices getInstace() {
 		return ext;
 	}
+
 	public static void main(String[] args) throws Exception {
 		ExternalServices e = ExternalServices.getInstace();
 		NFTCollectionView col = new NFTCollectionView("a", "5", "3", (5 / 3) + "");
@@ -155,8 +157,9 @@ public class ExternalServices {
 		a.add(col);
 		e.listToExcel(a);
 		ArrayList<NFTCollectionView> list = e.uploadList("collections", a.size(), 4);
-		for(NFTCollectionView colo: list)
-			System.out.println(colo.getCollection_name()+" "+colo.getOpensea_price()+" "+colo.getMagic_eden_price()+" "+colo.getDiff());
+		for (NFTCollectionView colo : list)
+			System.out.println(colo.getCollection_name() + " " + colo.getOpensea_price() + " "
+					+ colo.getMagic_eden_price() + " " + colo.getDiff());
 
 	}
 }
