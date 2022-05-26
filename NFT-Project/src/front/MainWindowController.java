@@ -514,14 +514,17 @@ public class MainWindowController {
 			for (NFTCollectionView nftCollectionView : temp) {
 				runner.addConstCollection(nftCollectionView.getCollection_name().toLowerCase());
 			}
-//			
-//			ObservableList<NFTCollectionView> list = FXCollections
-//					.observableList(external.uploadList("collections", rawPerPage, 4));
-//
-//			collectionTableView.setItems(list);
+			
+			ObservableList<NFTCollectionView> list = FXCollections
+					.observableList(external.uploadList("collections", rawPerPage, 4));
+
+			collectionTableView.setItems(list);
+			System.out.println("List uploaded");
 		} catch (Exception e) {
 			System.out.println("Save a list and try again");
+			e.printStackTrace();
 		}
+		
 	}
 
 	@FXML
@@ -551,6 +554,7 @@ public class MainWindowController {
 				t.start();
 			} else
 				updateEmailFields();
+			System.out.println("Saved email");
 		}
 	}
 
@@ -571,6 +575,7 @@ public class MainWindowController {
 			System.out.println("please enter only numbers");
 		}
 		send.updateFields(emailArray, collections, threshold, sleepTime);
+		System.out.println("Updated email fields");
 	}
 
 	 public void SetImage (){
