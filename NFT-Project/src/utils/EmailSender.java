@@ -11,7 +11,7 @@ public class EmailSender implements Runnable {
 	float threshold;
 	int sleepTime;
 	ExternalServices ext = ExternalServices.getInstace();
-	
+
 	public EmailSender(String[] sendTo, ArrayList<NFTCollectionView> collections, float threshold, int sleepTime) {
 		this.sendTo = sendTo;
 		this.collections = collections;
@@ -19,7 +19,8 @@ public class EmailSender implements Runnable {
 		this.sleepTime = sleepTime;
 	}
 
-	public void updateFields(String[] sendTo, ArrayList<NFTCollectionView> collections,float threshold, int sleepTime) {
+	public void updateFields(String[] sendTo, ArrayList<NFTCollectionView> collections, float threshold,
+			int sleepTime) {
 		this.sendTo = sendTo;
 		this.collections = collections;
 		this.threshold = threshold;
@@ -29,6 +30,7 @@ public class EmailSender implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
+			System.out.println("Iteration mail");
 			String toSend = "Collection name			  OpenSea 		  Magic Eden		Diff[%]\n";
 			int count = 0;
 			for (NFTCollectionView col : collections) {
@@ -42,8 +44,13 @@ public class EmailSender implements Runnable {
 				}
 			}
 			if (count > 0)
-				for (String email : sendTo)
-					ext.sendMail(email, toSend);
+				for (String email : sendTo) {
+					if (email.matches("^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$")) {
+						ext.sendMail(email, toSend);
+						System.out.println("email:" + email + "\ncontent:" + toSend);
+					}
+
+				}
 			try {
 				Thread.sleep(sleepTime * 1000);
 				// Thread.sleep(sleepTime*1000);
