@@ -19,7 +19,7 @@ import com.google.gson.internal.LinkedTreeMap;
 
 public class MagicEdenManager {
 	private static String urlMagicEden100 = "https://api-mainnet.magiceden.dev/v2/collections?offset=0&limit=100";
-	
+
 	private static String urlMagicEden500 = "https://api-mainnet.magiceden.dev/v2/collections?offset=0&limit=500";
 	private static String urlMagicEden1000 = "https://api-mainnet.magiceden.dev/v2/collections?offset=500&limit=500";
 	public HashMap<String, String> SymbolNameMap = new HashMap<>();
@@ -33,10 +33,8 @@ public class MagicEdenManager {
 
 			setCollectionNamesSymbols(urlMagicEden100);
 			Thread.sleep(1000);
-			//setCollectionNamesSymbols(urlMagicEden1000);
-			// System.out.println(collections);
+
 		} catch (IOException | InterruptedException e) {
-			// TODO Auto-generated catch block
 //			e.printStackTrace();
 		}
 
@@ -44,14 +42,14 @@ public class MagicEdenManager {
 
 	// Getting collection symbols by URL
 	private void setCollectionNamesSymbols(String url) throws IOException, InterruptedException {
-		
-		URL obj ;
-		HttpsURLConnection con ;
-		int responseCode=0;
-		while(true) {
+
+		URL obj;
+		HttpsURLConnection con;
+		int responseCode = 0;
+		while (true) {
 			obj = new URL(url);
 			con = (HttpsURLConnection) obj.openConnection();
-			
+
 			// optional default is GET
 			con.setRequestMethod("GET");
 
@@ -60,18 +58,15 @@ public class MagicEdenManager {
 			responseCode = con.getResponseCode();
 			System.out.println("\nSending 'GET' request to URL : " + url);
 			System.out.println("Response Code : " + responseCode);
-			if(responseCode == 200) {
+			if (responseCode == 200) {
 				break;
-			}
-			else {
+			} else {
 				System.out.println("Trying again");
 				Thread.sleep(10000);
-				
+
 			}
 		}
 
-		
-	
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		String inputLine;
 		StringBuffer response = new StringBuffer();
@@ -89,9 +84,6 @@ public class MagicEdenManager {
 			String name = (String) collection.get("name");
 			SymbolNameMap.put(symbol, name);
 		}
-
-		// print result
-//		System.out.println(response.toString());
 
 	}
 
@@ -179,7 +171,6 @@ public class MagicEdenManager {
 	public HashMap<String, Double> get_subCollectionPricesBySymbols_MagicEden(ArrayList<String> symbols) {
 		// Magic-Eden
 		HashMap<String, Double> map = new HashMap<String, Double>();
-		int i = 0;
 		for (String symbol : symbols) {
 			String priceURLmagicEden = "https://api-mainnet.magiceden.dev/v2/collections/" + symbol + "/stats";
 			double floorPrice;
@@ -191,11 +182,7 @@ public class MagicEdenManager {
 				map.put(symbol, floorPrice);
 
 			}
-			i++;
-			if (i > 30) {
-				i = 0;
-				System.out.println("30 was sent");
-			}
+			
 		}
 
 		return map;
@@ -215,12 +202,9 @@ public class MagicEdenManager {
 
 			// add request header
 			con.setRequestProperty("User-Agent", "Mozilla/5.0");
-			
+
 			int responseCode = con.getResponseCode();
-//			System.out.println("\nSending 'GET' request to URL : " + url);
-//			System.out.println("Response Code : " + responseCode);
-			
-			
+
 			if (responseCode != 200) {
 				return -3;
 			}
@@ -236,13 +220,13 @@ public class MagicEdenManager {
 			LinkedTreeMap collection = gson.fromJson(response.toString(), LinkedTreeMap.class);
 			if (collection.containsKey("floorPrice")) {
 				double floorPrice = (double) collection.get("floorPrice");
-				return floorPrice / 1000000000;// getting wrong number
+				return floorPrice / 1000000000;// getting wrong number from api
 			} else {
 				return -1;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			
+
 //			e.printStackTrace();
 		}
 		return -2;

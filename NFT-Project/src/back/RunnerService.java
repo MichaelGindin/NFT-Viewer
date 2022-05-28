@@ -13,58 +13,53 @@ public class RunnerService implements Runnable {
 	public ConcurrentHashMap<String, Collection> safeCollection = new ConcurrentHashMap<String, Collection>();
 	public ConcurrentHashMap<String, Collection> safeConstCollection = new ConcurrentHashMap<String, Collection>();
 	public Set<String> constList = new HashSet<String>();
-	
+
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+
 		StartFillingConstantData();
 		StartFillingData();
 	}
-	
+
 	public void addConstCollection(String name) {
 		constList.add(name.toLowerCase().trim());
-		
+
 	}
+
 	public void StartFillingConstantData() {
-		if(constList.isEmpty())return;
+		if (constList.isEmpty())
+			return;
 		safeConstCollection = new ConcurrentHashMap<String, Collection>();
 		MagicEdenManager magicEdenManager = new MagicEdenManager();
 		OpenSeaManager openSeaManager = new OpenSeaManager();
 
-		
 		ArrayList<String> names = new ArrayList<String>(constList);
-	
-	
 
 		Thread[] workers = new Thread[names.size()];
 
 		for (int i = 0; i < names.size(); i++) {
 
 			int index = i;
-			workers[index]= new Thread(new Runnable() {
+			workers[index] = new Thread(new Runnable() {
 
 				@Override
 				public void run() {
 					String name = names.get(index);
-					String symbol = name.trim().replace(' ','_').toLowerCase();
-					
-				
+					String symbol = name.trim().replace(' ', '_').toLowerCase();
 
 					Double magicPrice = magicEdenManager.getPriceMagicEden(symbol);
 					Double openSeaPrice = openSeaManager.getPriceOpenSea(name);
-					
+
 					if (magicPrice == null && openSeaPrice == null) {
 						return;
 					}
-					
-					Collection newCollection =null;
-					if(magicPrice==null) {
+
+					Collection newCollection = null;
+					if (magicPrice == null) {
 						newCollection = new Collection(symbol, name, 0, openSeaPrice);
-					}
-					else if(openSeaPrice==null) {
-						newCollection = new Collection(symbol, name, magicPrice,0);
-					}
-					else {
+					} else if (openSeaPrice == null) {
+						newCollection = new Collection(symbol, name, magicPrice, 0);
+					} else {
 						newCollection = new Collection(symbol, name, magicPrice, openSeaPrice);
 //						safeCollection.put(name, newCollection);
 					}
@@ -73,11 +68,10 @@ public class RunnerService implements Runnable {
 				}
 			});
 			workers[index].start();
-				
+
+		}
 	}
-	}
-	
-	
+
 	public void StartFillingData() {
 		safeCollection = new ConcurrentHashMap<String, Collection>();
 		MagicEdenManager magicEdenManager = new MagicEdenManager();
@@ -97,7 +91,7 @@ public class RunnerService implements Runnable {
 		for (int i = 0; i < symbols.size(); i++) {
 
 			int index = i;
-			workers[index]= new Thread(new Runnable() {
+			workers[index] = new Thread(new Runnable() {
 
 				@Override
 				public void run() {
@@ -106,19 +100,17 @@ public class RunnerService implements Runnable {
 
 					Double magicPrice = magicEdenManager.getPriceMagicEden(symbol);
 					Double openSeaPrice = openSeaManager.getPriceOpenSea(name);
-					
+
 					if (magicPrice == null && openSeaPrice == null) {
 						return;
 					}
-					
-					Collection newCollection =null;
-					if(magicPrice==null) {
+
+					Collection newCollection = null;
+					if (magicPrice == null) {
 						newCollection = new Collection(symbol, name, 0, openSeaPrice);
-					}
-					else if(openSeaPrice==null) {
-						newCollection = new Collection(symbol, name, magicPrice,0);
-					}
-					else {
+					} else if (openSeaPrice == null) {
+						newCollection = new Collection(symbol, name, magicPrice, 0);
+					} else {
 						newCollection = new Collection(symbol, name, magicPrice, openSeaPrice);
 //						safeCollection.put(name, newCollection);
 					}
@@ -127,39 +119,7 @@ public class RunnerService implements Runnable {
 				}
 			});
 			workers[index].start();
-			
-			
-//			es.execute(new Runnable() {
-//
-//				@Override
-//				public void run() {
-//					String symbol = symbols.get(index);
-//					String name = magicEdenManager.SymbolNameMap.get(symbols.get(index));
-//
-//					Double magicPrice = magicEdenManager.getPriceMagicEden(symbol);
-//					Double openSeaPrice = openSeaManager.getPriceOpenSea(name);
-//					
-//					if (magicPrice == null && openSeaPrice == null) {
-//						return;
-//					}
-//					
-//					Collection newCollection =null;
-//					if(magicPrice==null) {
-//						newCollection = new Collection(symbol, name, 0, openSeaPrice);
-//					}
-//					else if(openSeaPrice==null) {
-//						newCollection = new Collection(symbol, name, magicPrice,0);
-//					}
-//					else {
-//						newCollection = new Collection(symbol, name, magicPrice, openSeaPrice);
-//						
-//					}
-//					safeCollection.put(name, newCollection);
-//
-//				}
-//			});
-			
-			
+
 		}
 		for (Thread thread : workers) {
 			try {
@@ -169,26 +129,7 @@ public class RunnerService implements Runnable {
 				System.err.println("join error");
 			}
 		}
-		
-		
-//
-//		HashMap<String, Double> magicMap = magicEdenManager.getCollectionPricesBySymbols_MagicEden(symbols);
-////		ArrayList<Collection> magicCollections = new ArrayList<>();
-//
-//		System.out.println("Got magic eden collections");
-//
-//		// ArrayList<String> names = magicEdenManager.getTopCollectionsNames();
-//		ArrayList<String> names = new ArrayList<>(magicEdenManager.SymbolNameMap.values());
-//		HashMap<String, Double> openSeaMap = openSeaManager.getCollectionPricesByNames_OpenSea(names);
-//
-//		System.out.println("Got Opensea collections");
-//
-//		HashMap<String, String> dict = magicEdenManager.SymbolNameMap;
-//		Collections = CombineMapsWithDict(dict, magicMap, openSeaMap);
-//
-//		PrintCollections(Collections);
-//
-//		System.out.println("Finished");
+
 	}
 
 	// join 2 collections

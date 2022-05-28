@@ -4,21 +4,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-import com.aspose.cells.DateTime;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -31,15 +24,16 @@ public class ExchangeAdapter {
 	// currencies to usd
 	static HashMap<String, Double> currencies = new HashMap<String, Double>();
 	private static final ExchangeAdapter INSTANCE = new ExchangeAdapter();
-	
+
 	public static ExchangeAdapter getInstance() {
 		return INSTANCE;
 	}
-	
+
 	private ExchangeAdapter() {
 		updateCurrencies();
 
 	}
+
 	private void updateCurrencies() {
 		readCryptoCurrenciesFromJson();
 		readRegularCurrenciesFromJson();
@@ -65,10 +59,10 @@ public class ExchangeAdapter {
 	}
 
 	private void readCryptoCurrenciesFromJson() {
-		if(isRequestForCryptoCurrenciesNeeded()) {
+		if (isRequestForCryptoCurrenciesNeeded()) {
 			fetchCryptoCurrenciesToJson();
 		}
-		
+
 		// read currencies.json file and put it in currencies hashmap
 		Gson gson = new Gson();
 
@@ -128,9 +122,9 @@ public class ExchangeAdapter {
 			LinkedTreeMap rate = gson.fromJson(rates.get(0), LinkedTreeMap.class);
 			String timeString = (String) rate.get("time");
 //			dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-			
+
 			String date = (timeString.split("T"))[0];
-			
+
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Timestamp currencyTimestamp = new Timestamp((dateFormat.parse(date)).getTime());
 
@@ -143,7 +137,6 @@ public class ExchangeAdapter {
 				return false;
 			}
 			return true;
-
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -183,10 +176,10 @@ public class ExchangeAdapter {
 	}
 
 	private void readRegularCurrenciesFromJson() {
-		if(isRequestForRegularCurrenciesNeeded()) {
+		if (isRequestForRegularCurrenciesNeeded()) {
 			fetchRegularCurrenciesToJson();
 		}
-		
+
 		// read currencies.json file and put it in currencies hashmap
 		Gson gson = new Gson();
 

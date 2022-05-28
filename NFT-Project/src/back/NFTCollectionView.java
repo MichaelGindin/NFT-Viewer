@@ -2,7 +2,7 @@ package back;
 
 import java.util.Comparator;
 
-public class NFTCollectionView implements Comparator<NFTCollectionView>{
+public class NFTCollectionView implements Comparator<NFTCollectionView> {
 	private String collection_name;
 	private String opensea_price;
 	private String magic_eden_price;

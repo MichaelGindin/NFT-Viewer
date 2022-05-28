@@ -16,6 +16,7 @@ import utils.ExchangeAdapter;
 
 public class OpenSeaManager {
 	ExchangeAdapter exchangeAdapter = ExchangeAdapter.getInstance();
+
 	public HashMap<String, Double> getCollectionPricesByNames_OpenSea(ArrayList<String> symbols) {
 
 		HashMap<String, Double> map1 = new HashMap<String, Double>();
@@ -80,8 +81,9 @@ public class OpenSeaManager {
 		map1.putAll(map3);
 		return map1;
 	}
+
 	public Double getPriceOpenSea(String symbol) {
-		
+
 		ArrayList<String> names = convertNameString(symbol);
 		for (String name : names) {
 			String priceURLopenSea = "https://api.opensea.io/api/v1/collection/" + name + "/stats";
@@ -94,7 +96,7 @@ public class OpenSeaManager {
 				return floorPrice;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -126,25 +128,6 @@ public class OpenSeaManager {
 		try {
 			HttpResponse<String> response = Unirest.get(url).header("Accept", "application/json").asString();
 
-//			System.out.println("\nSending 'GET' request to URL : " + url);
-//			System.out.println("Response Code : " + responseCode);
-
-//			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-//			String inputLine;
-//			StringBuffer response = new StringBuffer();
-//			Gson gson = new Gson();
-//			while ((inputLine = in.readLine()) != null) {
-//				response.append(inputLine);
-//
-//			}
-//			in.close();
-//			LinkedTreeMap collection = gson.fromJson(response.toString(), LinkedTreeMap.class);
-//			if (collection.containsKey("floor_price")) {
-//				double floorPrice = (double) collection.get("floor_price");
-//				return floorPrice;
-//			} else {
-//				return -1;
-//			}
 			if (response.getStatus() == 200) {
 
 				Gson gson = new Gson();
@@ -156,7 +139,7 @@ public class OpenSeaManager {
 							return -1;
 						double floorPrice = (double) stats.get("floor_price");
 						return exchangeAdapter.Convert("eth", "sol", floorPrice);
-								
+
 					} else {
 						return -4;
 					}
@@ -168,7 +151,7 @@ public class OpenSeaManager {
 			}
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 //			e.printStackTrace();
 		}
 		return -3;
